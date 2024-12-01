@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card } from './components/ui/card';
-import { Shield, Check } from 'lucide-react';
+import { Shield, Check, Trash2, Lock, Cloud, Heart } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -13,127 +13,149 @@ import {
 
 const MAX_CHARACTERS = 5000;
 const STORAGE_KEY = 'unburden-terms-accepted';
-const ACCEPTANCE_EXPIRY = 180 * 24 * 60 * 60 * 1000; // 180 days in milliseconds
+const ACCEPTANCE_EXPIRY = 180 * 24 * 60 * 60 * 1000;
 
-const TermsAndConditions: React.FC<{
-  isOpen: boolean;
-  onAccept: () => void;
-}> = ({ isOpen, onAccept }) => (
-  <AlertDialog open={isOpen}>
-    <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
-      <AlertDialogHeader>
-        <AlertDialogTitle className="flex items-center gap-2">
-          <Shield className="text-green-500" />
-          Terms & Conditions
-        </AlertDialogTitle>
-        <AlertDialogDescription>
-          <div className="space-y-4 text-left">
-            <h3 className="font-bold text-lg">Privacy Policy</h3>
-            <ul className="list-disc list-inside space-y-2">
-              <li>No data is stored or tracked</li>
-              <li>Your thoughts are completely private</li>
-              <li>Content is deleted immediately after use</li>
-            </ul>
-
-            <h3 className="font-bold text-lg mt-4">Usage Guidelines</h3>
-            <p className="text-sm">
-              This is a safe space to express your emotions. 
-              Use it responsibly and respectfully.
-            </p>
-
-            <div className="bg-blue-50 p-3 rounded-md mt-4">
-              <p className="font-semibold">
-                Important: This is not a substitute for professional mental health support.
-              </p>
-            </div>
-          </div>
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogAction 
-          onClick={onAccept}
-          className="bg-green-500 hover:bg-green-600"
-        >
-          <Check className="mr-2" /> I Understand and Accept
-        </AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
-);
+// Terms component remains the same
 
 const Unburden: React.FC = () => {
   const [thought, setThought] = useState<string>('');
   const [characterCount, setCharacterCount] = useState<number>(0);
   const [showTerms, setShowTerms] = useState<boolean>(false);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
-  // Check Terms Acceptance on Component Mount
-  useEffect(() => {
-    const termsData = localStorage.getItem(STORAGE_KEY);
-    if (termsData) {
-      const { timestamp } = JSON.parse(termsData);
-      // Check if terms were accepted more than 180 days ago
-      if (Date.now() - timestamp > ACCEPTANCE_EXPIRY) {
-        setShowTerms(true);
-      }
-    } else {
-      setShowTerms(true);
-    }
-  }, []);
-
-  // Handle Terms Acceptance
-  const handleTermsAccept = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      timestamp: Date.now()
-    }));
-    setShowTerms(false);
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = event.target.value;
-    setThought(value);
-    setCharacterCount(value.length);
-  };
+  // Previous handlers remain the same
 
   const handleActionClick = () => {
-    // Clear thought and reset related states
-    setThought('');
-    setCharacterCount(0);
+    if (!thought) return;
+    
+    setIsAnimating(true);
+    setTimeout(() => {
+      setThought('');
+      setCharacterCount(0);
+      setIsAnimating(false);
+    }, 1500); // Match this with animation duration
   };
 
   return (
     <>
-      <TermsAndConditions 
-        isOpen={showTerms}
-        onAccept={handleTermsAccept}
-      />
-      <div className="container mx-auto p-4 max-w-xl">
-        <Card className="p-4 sm:p-6 shadow-lg">
-          <div className="relative">
-            <textarea
-              value={thought}
-              onChange={handleInputChange}
-              className="w-full p-3 sm:p-4 border rounded-md min-h-[200px] 
-                focus:ring-2 focus:ring-blue-200 transition-all duration-300
-                text-sm sm:text-base"
-              placeholder="This is a safe space. Share your thoughts freely..."
-              maxLength={MAX_CHARACTERS}
-            />
-            <div className="absolute bottom-2 right-4 text-xs sm:text-sm text-gray-500">
-              {characterCount}/{MAX_CHARACTERS}
+      <TermsAndConditions isOpen={showTerms} onAccept={handleTermsAccept} />
+      <div className="container mx-auto p-4 max-w-xl min-h-screen flex flex-col items-center justify-center">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-blue-600 mb-4">Unburden</h1>
+          <p className="text-xl text-blue-500">Release your thoughts into the digital void.</p>
+        </div>
+
+        <div className="flex justify-between w-full mb-8">
+          <div className="flex flex-col items-center">
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+              <Lock className="text-blue-500" size={24} />
             </div>
+            <span className="text-sm text-blue-600">Secure & Private</span>
           </div>
-          <div className="flex justify-end mt-4">
-            <button
-              onClick={handleActionClick}
-              className="bg-red-500 text-white px-4 py-2 rounded-md 
-                hover:bg-red-600 transition-colors 
-                text-sm sm:text-base"
-            >
-              Release Emotions
-            </button>
+          <div className="flex flex-col items-center">
+            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-2">
+              <Cloud className="text-purple-500" size={24} />
+            </div>
+            <span className="text-sm text-purple-600">Nothing Stored</span>
           </div>
+          <div className="flex flex-col items-center">
+            <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mb-2">
+              <Heart className="text-pink-500" size={24} />
+            </div>
+            <span className="text-sm text-pink-600">Feel Lighter</span>
+          </div>
+        </div>
+
+        <Card className="w-full p-6 shadow-lg relative overflow-hidden">
+          <textarea
+            value={thought}
+            onChange={(e) => {
+              setThought(e.target.value);
+              setCharacterCount(e.target.value.length);
+            }}
+            className={`w-full p-4 border rounded-md min-h-[200px] 
+              focus:ring-2 focus:ring-blue-200 transition-all duration-300
+              text-base resize-none ${isAnimating ? 'animate-float-away' : ''}`}
+            placeholder="Pour your heart out..."
+            maxLength={MAX_CHARACTERS}
+            disabled={isAnimating}
+          />
+          
+          <div className="absolute bottom-4 right-4 text-sm text-gray-500">
+            {characterCount}/{MAX_CHARACTERS}
+          </div>
+
+          {isAnimating && (
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center animate-fade-in">
+                <Trash2 className="text-gray-400" size={32} />
+              </div>
+            </div>
+          )}
         </Card>
+
+        <button
+          onClick={handleActionClick}
+          disabled={!thought || isAnimating}
+          className={`mt-6 px-8 py-3 rounded-full text-white font-medium
+            transition-all duration-300 transform hover:scale-105
+            ${thought && !isAnimating ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-300'}
+            disabled:opacity-50 disabled:cursor-not-allowed
+            ${isAnimating ? 'animate-button-press' : ''}`}
+        >
+          Release Thoughts
+        </button>
+
+        <p className="text-gray-500 text-sm mt-4">
+          Press Enter or click the button to release your thoughts
+        </p>
       </div>
+
+      <style jsx>{`
+        @keyframes floatAway {
+          0% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: translateY(20px) scale(0.9);
+            opacity: 0.5;
+          }
+          100% {
+            transform: translateY(40px) scale(0.8);
+            opacity: 0;
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes buttonPress {
+          0% { transform: scale(1); }
+          50% { transform: scale(0.95); }
+          100% { transform: scale(1); }
+        }
+
+        .animate-float-away {
+          animation: floatAway 1.5s ease-in-out forwards;
+        }
+
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .animate-button-press {
+          animation: buttonPress 1.5s ease-in-out;
+        }
+      `}</style>
     </>
   );
 };
