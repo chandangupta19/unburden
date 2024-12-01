@@ -11,9 +11,95 @@ import {
   AlertDialogAction,
 } from './components/ui/alert-dialog';
 
-// Previous components (OnlineCheck and Terms) remain the same...
+const MAX_CHARACTERS = 5000;
 
-// Success Message Component updated for center positioning
+// Online Check Component
+const OnlineCheck: React.FC = () => {
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  if (isOnline) return null;
+
+  return (
+    <AlertDialog open={true}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
+            <WifiOff className="text-red-500" />
+            Internet Connection Required
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            <p className="mb-4">
+              First-time access to Unburden requires an internet connection to verify and accept the latest terms and conditions.
+            </p>
+            <p>Please connect to the internet and refresh the page.</p>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+// Terms and Conditions Component
+const TermsAndConditions: React.FC<{
+  isOpen: boolean;
+  onAccept: () => void;
+}> = ({ isOpen, onAccept }) => (
+  <AlertDialog open={isOpen}>
+    <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
+      <AlertDialogHeader>
+        <AlertDialogTitle className="flex items-center gap-2">
+          <Shield className="text-green-500" />
+          Terms & Conditions
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          <div className="space-y-4 text-left">
+            <h3 className="font-bold text-lg">Technical Guidelines</h3>
+            <ul className="list-disc list-inside space-y-2">
+              <li>No data is stored or saved</li>
+              <li>No tracking or analytics</li>
+              <li>All content is deleted immediately after use</li>
+            </ul>
+
+            <h3 className="font-bold text-lg mt-4">Legal Notice</h3>
+            <p className="text-sm">
+              This platform operates as a text processing tool with immediate data deletion. 
+              No responsibility is assumed for user-generated content.
+            </p>
+
+            <div className="bg-blue-50 p-3 rounded-md mt-4">
+              <p className="font-semibold text-sm">
+                This is a digital tool for processing text. Not a substitute for professional mental health services.
+              </p>
+            </div>
+          </div>
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogAction 
+          onClick={onAccept}
+          className="bg-green-500 hover:bg-green-600 transition-colors duration-200"
+        >
+          <Check className="mr-2" /> I Accept
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+);
+
+// Success Message Component
 const SuccessMessage: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
     <div className="bg-white/90 text-blue-600 px-8 py-4 rounded-lg shadow-lg animate-poof text-xl font-semibold">
@@ -41,7 +127,8 @@ const FontSizeSlider: React.FC<{
   </div>
 );
 
-const TopIllustration = () => (
+// Top Illustration Component
+const TopIllustration: React.FC = () => (
   <svg 
     viewBox="0 0 400 100" 
     className="w-full h-32 mb-8 text-blue-100"
@@ -58,6 +145,7 @@ const TopIllustration = () => (
   </svg>
 );
 
+// Main Component
 const Unburden: React.FC = () => {
   const [thought, setThought] = useState<string>('');
   const [characterCount, setCharacterCount] = useState<number>(0);
@@ -95,7 +183,6 @@ const Unburden: React.FC = () => {
     if (!thought) return;
     
     setIsAnimating(true);
-    // Show success message after animation completes
     setTimeout(() => {
       setShowSuccess(true);
       setTimeout(() => {
