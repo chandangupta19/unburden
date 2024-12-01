@@ -12,38 +12,35 @@ body {
   background-color: #f4f4f4;
 }
 
-/* Typewriter effect */
-@keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-.typewriter {
-  overflow: hidden;
-  white-space: nowrap;
-  animation: typewriter 2s steps(40, end);
-}
-
-/* Paper crumple and bin animation */
-@keyframes crumple {
+@keyframes crumpleAndThrow {
   0% {
-    transform: scale(1) rotate(0deg);
+    transform: scale(1) rotate(0deg) translateY(0);
+    border-radius: 4px;
     opacity: 1;
   }
-  25% {
-    transform: scale(0.8) rotate(-10deg);
+  15% {
+    transform: scale(0.9) rotate(-3deg) translateY(0);
+    border-radius: 8px;
     opacity: 1;
+  }
+  30% {
+    transform: scale(0.7) rotate(5deg) translateY(0);
+    border-radius: 16px;
+    opacity: 0.95;
   }
   50% {
-    transform: scale(0.6) rotate(10deg) translateY(50px);
-    opacity: 0.8;
+    transform: scale(0.5) rotate(-8deg) translateY(-20px);
+    border-radius: 20px;
+    opacity: 0.9;
   }
   75% {
-    transform: scale(0.4) rotate(-5deg) translateY(100px);
-    opacity: 0.6;
+    transform: scale(0.4) rotate(5deg) translateY(50px);
+    border-radius: 20px;
+    opacity: 0.8;
   }
   100% {
-    transform: scale(0.2) rotate(0deg) translateY(150px);
+    transform: scale(0.3) rotate(0deg) translateY(150px);
+    border-radius: 20px;
     opacity: 0;
   }
 }
@@ -51,11 +48,11 @@ body {
 @keyframes binAppear {
   0% {
     opacity: 0;
-    transform: translateY(20px) scale(0.8);
+    transform: translateY(10px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -64,36 +61,35 @@ body {
     opacity: 0;
     transform: scale(0.8);
   }
-  10% {
+  50% {
     opacity: 1;
     transform: scale(1.1);
   }
-  20% {
-    transform: scale(1);
-  }
-  80% {
-    opacity: 1;
-    transform: scale(1);
-  }
   100% {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(1);
   }
 }
 
 .animate-crumple {
-  animation: crumple 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: crumpleAndThrow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: center center;
+  will-change: transform, border-radius, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 .animate-bin-appear {
-  animation: binAppear 0.3s ease-out forwards;
+  animation: binAppear 0.2s ease-out forwards;
+  will-change: transform, opacity;
 }
 
 .animate-poof {
-  animation: poofMessage 2s ease-out forwards;
+  animation: poofMessage 1.5s ease-out forwards;
+  will-change: transform, opacity;
 }
 
-/* Font size slider styles */
+/* Font slider styles remain the same */
 .font-slider {
   -webkit-appearance: none;
   width: 100%;
