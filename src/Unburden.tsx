@@ -13,30 +13,6 @@ import {
 
 const MAX_CHARACTERS = 5000;
 
-// Custom TextArea Component
-const TextArea: React.FC<{
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  fontSize: number;
-  isAnimating: boolean;
-  disabled: boolean;
-}> = ({ value, onChange, fontSize, isAnimating, disabled }) => (
-  <div className={`relative ${isAnimating ? 'animate-crumple' : ''}`}>
-    <div className="absolute inset-0 paper-texture crease-overlay"></div>
-    <textarea
-      value={value}
-      onChange={onChange}
-      style={{ fontSize: `${fontSize}px` }}
-      className="w-full p-4 border rounded-md min-h-[200px] 
-        focus:ring-2 focus:ring-blue-200 transition-all duration-300
-        text-base resize-none relative z-10 bg-transparent"
-      placeholder="Pour your heart out..."
-      maxLength={MAX_CHARACTERS}
-      disabled={disabled}
-    />
-  </div>
-);
-
 // Online Check Component
 const OnlineCheck: React.FC = () => {
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
@@ -114,7 +90,7 @@ const TermsAndConditions: React.FC<{
       <AlertDialogFooter>
         <AlertDialogAction 
           onClick={onAccept}
-          className="bg-green-500 hover:bg-green-600 transition-colors duration-200"
+          className="bg-green-500 hover:bg-green-600"
         >
           <Check className="mr-2" /> I Accept
         </AlertDialogAction>
@@ -207,18 +183,15 @@ const Unburden: React.FC = () => {
     if (!thought || isAnimating) return;
     
     setIsAnimating(true);
-
     setTimeout(() => {
+      setShowSuccess(true);
       setTimeout(() => {
-        setShowSuccess(true);
-        setTimeout(() => {
-          setShowSuccess(false);
-          setThought('');
-          setCharacterCount(0);
-          setIsAnimating(false);
-        }, 1500);
-      }, 800);
-    }, 100);
+        setShowSuccess(false);
+        setThought('');
+        setCharacterCount(0);
+        setIsAnimating(false);
+      }, 1500);
+    }, 800);
   };
 
   return (
@@ -233,8 +206,8 @@ const Unburden: React.FC = () => {
         <TopIllustration />
         
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-600 mb-4 typewriter">Unburden</h1>
-          <p className="text-xl text-blue-500 typewriter">Release your thoughts into the digital void.</p>
+          <h1 className="text-4xl font-bold text-blue-600 mb-4">Unburden</h1>
+          <p className="text-xl text-blue-500">Release your thoughts into the digital void.</p>
         </div>
 
         <div className="flex justify-between w-full mb-8 flex-wrap gap-4 sm:flex-nowrap">
@@ -259,14 +232,18 @@ const Unburden: React.FC = () => {
         </div>
 
         <Card className="w-full p-6 shadow-lg relative overflow-hidden">
-          <TextArea
+          <textarea
             value={thought}
             onChange={(e) => {
               setThought(e.target.value);
               setCharacterCount(e.target.value.length);
             }}
-            fontSize={fontSize}
-            isAnimating={isAnimating}
+            style={{ fontSize: `${fontSize}px` }}
+            className={`w-full p-4 border rounded-md min-h-[200px] 
+              focus:ring-2 focus:ring-blue-200 transition-all duration-300
+              text-base resize-none ${isAnimating ? 'animate-slide-down' : ''}`}
+            placeholder="Pour your heart out..."
+            maxLength={MAX_CHARACTERS}
             disabled={isAnimating}
           />
           
@@ -291,8 +268,8 @@ const Unburden: React.FC = () => {
           onClick={handleActionClick}
           disabled={!thought || isAnimating}
           className={`px-8 py-3 rounded-full text-white font-medium
-            transition-all duration-300 transform hover:scale-105 hover-gradient
-            ${thought && !isAnimating ? 'bg-blue-500' : 'bg-gray-300'}
+            transition-all duration-300 transform hover:scale-105
+            ${thought && !isAnimating ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-300'}
             disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           Release Thoughts
