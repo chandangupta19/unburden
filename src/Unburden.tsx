@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from '../../components/ui/card';
+import { Card } from './components/ui/card';
 import { Info, Shield, Check } from 'lucide-react';
 import {
   AlertDialog,
@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogFooter,
   AlertDialogAction,
-} from '../../components/ui/alert-dialog';
+} from './components/ui/alert-dialog';
 
 const MAX_CHARACTERS = 5000;
 const STORAGE_KEY = 'unburden-terms-accepted';
