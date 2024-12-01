@@ -15,7 +15,6 @@ const MAX_CHARACTERS = 5000;
 const STORAGE_KEY = 'unburden-terms-accepted';
 const ACCEPTANCE_EXPIRY = 180 * 24 * 60 * 60 * 1000;
 
-// Terms and Conditions Component
 const TermsAndConditions: React.FC<{
   isOpen: boolean;
   onAccept: () => void;
@@ -29,22 +28,22 @@ const TermsAndConditions: React.FC<{
         </AlertDialogTitle>
         <AlertDialogDescription>
           <div className="space-y-4 text-left">
-            <h3 className="font-bold text-lg">Privacy Policy</h3>
+            <h3 className="font-bold text-lg">Technical Guidelines</h3>
             <ul className="list-disc list-inside space-y-2">
-              <li>No data is stored or tracked</li>
-              <li>Your thoughts are completely private</li>
-              <li>Content is deleted immediately after use</li>
+              <li>Zero data retention - all content is immediately deleted</li>
+              <li>No tracking, no cookies, no analytics</li>
+              <li>Content exists only in your browser's temporary memory</li>
             </ul>
 
-            <h3 className="font-bold text-lg mt-4">Usage Guidelines</h3>
+            <h3 className="font-bold text-lg mt-4">Legal Notice</h3>
             <p className="text-sm">
-              This is a safe space to express your emotions. 
-              Use it responsibly and respectfully.
+              This platform operates strictly as a text processing tool with immediate data deletion. 
+              No responsibility is assumed for user-generated content.
             </p>
 
             <div className="bg-blue-50 p-3 rounded-md mt-4">
-              <p className="font-semibold">
-                Important: This is not a substitute for professional mental health support.
+              <p className="font-semibold text-sm">
+                Note: This is a digital tool for temporary text processing. Not a substitution for professional services.
               </p>
             </div>
           </div>
@@ -55,7 +54,7 @@ const TermsAndConditions: React.FC<{
           onClick={onAccept}
           className="bg-green-500 hover:bg-green-600"
         >
-          <Check className="mr-2" /> I Understand and Accept
+          <Check className="mr-2" /> I Accept
         </AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
@@ -95,7 +94,7 @@ const Unburden: React.FC = () => {
       setThought('');
       setCharacterCount(0);
       setIsAnimating(false);
-    }, 1500);
+    }, 600); // Reduced from 1500ms to 600ms to match animation
   };
 
   return (
@@ -172,7 +171,7 @@ const Unburden: React.FC = () => {
         </button>
 
         <p className="text-gray-500 text-sm mt-4">
-          Press Enter or click the button to release your thoughts
+          Click the button to release your thoughts
         </p>
       </div>
     </>

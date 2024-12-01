@@ -18,11 +18,11 @@ body {
     opacity: 1;
   }
   50% {
-    transform: translateY(20px) scale(0.9);
+    transform: translateY(10px) scale(0.9);
     opacity: 0.5;
   }
   100% {
-    transform: translateY(40px) scale(0.8);
+    transform: translateY(20px) scale(0.8);
     opacity: 0;
   }
 }
@@ -30,7 +30,7 @@ body {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -45,13 +45,13 @@ body {
 }
 
 .animate-float-away {
-  animation: floatAway 1.5s ease-in-out forwards;
+  animation: floatAway 0.6s ease-in-out forwards;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 .animate-button-press {
-  animation: buttonPress 1.5s ease-in-out;
+  animation: buttonPress 0.6s ease-in-out;
 }
