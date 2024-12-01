@@ -30,16 +30,20 @@ body {
     transform: scale(1) rotate(0deg);
     opacity: 1;
   }
-  40% {
-    transform: scale(0.7) rotate(-15deg);
+  25% {
+    transform: scale(0.8) rotate(-10deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.6) rotate(10deg) translateY(50px);
     opacity: 0.8;
   }
-  70% {
-    transform: scale(0.4) rotate(15deg) translateY(100px);
+  75% {
+    transform: scale(0.4) rotate(-5deg) translateY(100px);
     opacity: 0.6;
   }
   100% {
-    transform: scale(0.2) rotate(0deg) translateY(200px);
+    transform: scale(0.2) rotate(0deg) translateY(150px);
     opacity: 0;
   }
 }
@@ -55,36 +59,38 @@ body {
   }
 }
 
-@keyframes successMessage {
+@keyframes poofMessage {
   0% {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: scale(0.8);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  20% {
+    transform: scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1);
   }
   100% {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 0;
+    transform: scale(0.8);
   }
 }
 
 .animate-crumple {
-  animation: crumple 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: crumple 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .animate-bin-appear {
   animation: binAppear 0.3s ease-out forwards;
 }
 
-.animate-success {
-  animation: successMessage 0.5s ease-out forwards;
-}
-
-/* Smooth color transitions */
-.transition-all {
-  transition: all 0.3s ease;
-}
-
-.hover-gradient:hover {
-  background: linear-gradient(45deg, #3b82f6, #60a5fa);
+.animate-poof {
+  animation: poofMessage 2s ease-out forwards;
 }
 
 /* Font size slider styles */
