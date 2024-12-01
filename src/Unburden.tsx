@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card } from './components/ui/card';
 import { Shield, Check, Trash2, Lock, Cloud, Heart } from 'lucide-react';
 import {
@@ -12,8 +12,6 @@ import {
 } from './components/ui/alert-dialog';
 
 const MAX_CHARACTERS = 5000;
-const STORAGE_KEY = 'unburden-terms-accepted';
-const ACCEPTANCE_EXPIRY = 180 * 24 * 60 * 60 * 1000;
 
 const TermsAndConditions: React.FC<{
   isOpen: boolean;
@@ -64,25 +62,10 @@ const TermsAndConditions: React.FC<{
 const Unburden: React.FC = () => {
   const [thought, setThought] = useState<string>('');
   const [characterCount, setCharacterCount] = useState<number>(0);
-  const [showTerms, setShowTerms] = useState<boolean>(false);
+  const [showTerms, setShowTerms] = useState<boolean>(true); // Always true initially
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
-  useEffect(() => {
-    const termsData = localStorage.getItem(STORAGE_KEY);
-    if (termsData) {
-      const { timestamp } = JSON.parse(termsData);
-      if (Date.now() - timestamp > ACCEPTANCE_EXPIRY) {
-        setShowTerms(true);
-      }
-    } else {
-      setShowTerms(true);
-    }
-  }, []);
-
   const handleTermsAccept = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      timestamp: Date.now()
-    }));
     setShowTerms(false);
   };
 
@@ -94,7 +77,7 @@ const Unburden: React.FC = () => {
       setThought('');
       setCharacterCount(0);
       setIsAnimating(false);
-    }, 600); // Reduced from 1500ms to 600ms to match animation
+    }, 800); // Matches animation duration
   };
 
   return (
@@ -139,7 +122,7 @@ const Unburden: React.FC = () => {
             }}
             className={`w-full p-4 border rounded-md min-h-[200px] 
               focus:ring-2 focus:ring-blue-200 transition-all duration-300
-              text-base resize-none ${isAnimating ? 'animate-float-away' : ''}`}
+              text-base resize-none ${isAnimating ? 'animate-slide-down' : ''}`}
             placeholder="Pour your heart out..."
             maxLength={MAX_CHARACTERS}
             disabled={isAnimating}
@@ -151,7 +134,7 @@ const Unburden: React.FC = () => {
 
           {isAnimating && (
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center animate-fade-in">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center animate-bin-appear">
                 <Trash2 className="text-gray-400" size={32} />
               </div>
             </div>
@@ -164,8 +147,7 @@ const Unburden: React.FC = () => {
           className={`mt-6 px-8 py-3 rounded-full text-white font-medium
             transition-all duration-300 transform hover:scale-105
             ${thought && !isAnimating ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-300'}
-            disabled:opacity-50 disabled:cursor-not-allowed
-            ${isAnimating ? 'animate-button-press' : ''}`}
+            disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           Release Thoughts
         </button>
