@@ -6,6 +6,11 @@ interface AlertDialogProps {
   children: React.ReactNode;
 }
 
+interface BaseProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
 export const AlertDialog: React.FC<AlertDialogProps> = ({ 
   open, 
   onOpenChange, 
@@ -22,27 +27,24 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
   );
 };
 
-export const AlertDialogContent: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div>{children}</div>
+export const AlertDialogContent: React.FC<BaseProps> = ({ children, className = '' }) => (
+  <div className={className}>{children}</div>
 );
 
-export const AlertDialogHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mb-4">{children}</div>
+export const AlertDialogHeader: React.FC<BaseProps> = ({ children, className = '' }) => (
+  <div className={`mb-4 ${className}`}>{children}</div>
 );
 
-export const AlertDialogTitle: React.FC<{ children: React.ReactNode, className?: string }> = ({ 
-  children, 
-  className = '' 
-}) => (
+export const AlertDialogTitle: React.FC<BaseProps> = ({ children, className = '' }) => (
   <h2 className={`text-xl font-bold ${className}`}>{children}</h2>
 );
 
-export const AlertDialogDescription: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="text-sm text-gray-600">{children}</div>
+export const AlertDialogDescription: React.FC<BaseProps> = ({ children, className = '' }) => (
+  <div className={`text-sm text-gray-600 ${className}`}>{children}</div>
 );
 
-export const AlertDialogFooter: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="flex justify-end space-x-2 mt-4">{children}</div>
+export const AlertDialogFooter: React.FC<BaseProps> = ({ children, className = '' }) => (
+  <div className={`flex justify-end space-x-2 mt-4 ${className}`}>{children}</div>
 );
 
 export const AlertDialogAction: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ 
