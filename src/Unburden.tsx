@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from './components/ui/card';
-import { Shield, Check, Trash2, Lock, Cloud, Heart } from 'lucide-react';
+import { Shield, Check, Trash2, Lock, Cloud, Heart, WifiOff } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -12,6 +12,44 @@ import {
 } from './components/ui/alert-dialog';
 
 const MAX_CHARACTERS = 5000;
+
+const OnlineCheck: React.FC = () => {
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  if (isOnline) return null;
+
+  return (
+    <AlertDialog open={true}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
+            <WifiOff className="text-red-500" />
+            Internet Connection Required
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            <p className="mb-4">
+              First-time access to Unburden requires an internet connection to verify and accept the latest terms and conditions.
+            </p>
+            <p>Please connect to the internet and refresh the page.</p>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
 
 const TermsAndConditions: React.FC<{
   isOpen: boolean;
@@ -28,20 +66,20 @@ const TermsAndConditions: React.FC<{
           <div className="space-y-4 text-left">
             <h3 className="font-bold text-lg">Technical Guidelines</h3>
             <ul className="list-disc list-inside space-y-2">
-              <li>Zero data retention - all content is immediately deleted</li>
-              <li>No tracking, no cookies, no analytics</li>
-              <li>Content exists only in your browser's temporary memory</li>
+              <li>No data is stored or saved</li>
+              <li>No tracking or analytics</li>
+              <li>All content is deleted immediately after use</li>
             </ul>
 
             <h3 className="font-bold text-lg mt-4">Legal Notice</h3>
             <p className="text-sm">
-              This platform operates strictly as a text processing tool with immediate data deletion. 
+              This platform operates as a text processing tool with immediate data deletion. 
               No responsibility is assumed for user-generated content.
             </p>
 
             <div className="bg-blue-50 p-3 rounded-md mt-4">
               <p className="font-semibold text-sm">
-                Note: This is a digital tool for temporary text processing. Not a substitution for professional services.
+                This is a digital tool for processing text. Not a substitute for professional mental health services.
               </p>
             </div>
           </div>
@@ -62,10 +100,27 @@ const TermsAndConditions: React.FC<{
 const Unburden: React.FC = () => {
   const [thought, setThought] = useState<string>('');
   const [characterCount, setCharacterCount] = useState<number>(0);
-  const [showTerms, setShowTerms] = useState<boolean>(true); // Always true initially
+  const [showTerms, setShowTerms] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   const handleTermsAccept = () => {
+    if (!isOnline) {
+      return; // Don't allow acceptance if offline
+    }
     setShowTerms(false);
   };
 
@@ -77,11 +132,12 @@ const Unburden: React.FC = () => {
       setThought('');
       setCharacterCount(0);
       setIsAnimating(false);
-    }, 800); // Matches animation duration
+    }, 800);
   };
 
   return (
     <>
+      <OnlineCheck />
       <TermsAndConditions 
         isOpen={showTerms}
         onAccept={handleTermsAccept}
