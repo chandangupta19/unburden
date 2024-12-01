@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from './components/ui/card';
 import { Shield, Check, Trash2, Lock, Cloud, Heart } from 'lucide-react';
 import {
@@ -15,7 +15,52 @@ const MAX_CHARACTERS = 5000;
 const STORAGE_KEY = 'unburden-terms-accepted';
 const ACCEPTANCE_EXPIRY = 180 * 24 * 60 * 60 * 1000;
 
-// Terms component remains the same
+// Terms and Conditions Component
+const TermsAndConditions: React.FC<{
+  isOpen: boolean;
+  onAccept: () => void;
+}> = ({ isOpen, onAccept }) => (
+  <AlertDialog open={isOpen}>
+    <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
+      <AlertDialogHeader>
+        <AlertDialogTitle className="flex items-center gap-2">
+          <Shield className="text-green-500" />
+          Terms & Conditions
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          <div className="space-y-4 text-left">
+            <h3 className="font-bold text-lg">Privacy Policy</h3>
+            <ul className="list-disc list-inside space-y-2">
+              <li>No data is stored or tracked</li>
+              <li>Your thoughts are completely private</li>
+              <li>Content is deleted immediately after use</li>
+            </ul>
+
+            <h3 className="font-bold text-lg mt-4">Usage Guidelines</h3>
+            <p className="text-sm">
+              This is a safe space to express your emotions. 
+              Use it responsibly and respectfully.
+            </p>
+
+            <div className="bg-blue-50 p-3 rounded-md mt-4">
+              <p className="font-semibold">
+                Important: This is not a substitute for professional mental health support.
+              </p>
+            </div>
+          </div>
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogAction 
+          onClick={onAccept}
+          className="bg-green-500 hover:bg-green-600"
+        >
+          <Check className="mr-2" /> I Understand and Accept
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+);
 
 const Unburden: React.FC = () => {
   const [thought, setThought] = useState<string>('');
@@ -23,7 +68,25 @@ const Unburden: React.FC = () => {
   const [showTerms, setShowTerms] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
-  // Previous handlers remain the same
+  // Check Terms Acceptance on Component Mount
+  useEffect(() => {
+    const termsData = localStorage.getItem(STORAGE_KEY);
+    if (termsData) {
+      const { timestamp } = JSON.parse(termsData);
+      if (Date.now() - timestamp > ACCEPTANCE_EXPIRY) {
+        setShowTerms(true);
+      }
+    } else {
+      setShowTerms(true);
+    }
+  }, []);
+
+  const handleTermsAccept = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      timestamp: Date.now()
+    }));
+    setShowTerms(false);
+  };
 
   const handleActionClick = () => {
     if (!thought) return;
@@ -38,7 +101,10 @@ const Unburden: React.FC = () => {
 
   return (
     <>
-      <TermsAndConditions isOpen={showTerms} onAccept={handleTermsAccept} />
+      <TermsAndConditions 
+        isOpen={showTerms}
+        onAccept={handleTermsAccept}
+      />
       <div className="container mx-auto p-4 max-w-xl min-h-screen flex flex-col items-center justify-center">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-blue-600 mb-4">Unburden</h1>
