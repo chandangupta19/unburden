@@ -11,3 +11,47 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f4f4f4;
 }
+
+@keyframes floatAway {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(20px) scale(0.9);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(40px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes buttonPress {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.animate-float-away {
+  animation: floatAway 1.5s ease-in-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-button-press {
+  animation: buttonPress 1.5s ease-in-out;
+}

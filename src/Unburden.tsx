@@ -68,7 +68,6 @@ const Unburden: React.FC = () => {
   const [showTerms, setShowTerms] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
-  // Check Terms Acceptance on Component Mount
   useEffect(() => {
     const termsData = localStorage.getItem(STORAGE_KEY);
     if (termsData) {
@@ -96,7 +95,7 @@ const Unburden: React.FC = () => {
       setThought('');
       setCharacterCount(0);
       setIsAnimating(false);
-    }, 1500); // Match this with animation duration
+    }, 1500);
   };
 
   return (
@@ -176,52 +175,6 @@ const Unburden: React.FC = () => {
           Press Enter or click the button to release your thoughts
         </p>
       </div>
-
-      <style jsx>{`
-        @keyframes floatAway {
-          0% {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-          }
-          50% {
-            transform: translateY(20px) scale(0.9);
-            opacity: 0.5;
-          }
-          100% {
-            transform: translateY(40px) scale(0.8);
-            opacity: 0;
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes buttonPress {
-          0% { transform: scale(1); }
-          50% { transform: scale(0.95); }
-          100% { transform: scale(1); }
-        }
-
-        .animate-float-away {
-          animation: floatAway 1.5s ease-in-out forwards;
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-out forwards;
-        }
-
-        .animate-button-press {
-          animation: buttonPress 1.5s ease-in-out;
-        }
-      `}</style>
     </>
   );
 };
