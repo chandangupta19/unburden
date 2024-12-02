@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from './components/ui/card';
-import { Shield, Check, Trash2, Lock, Cloud, Heart, WifiOff, Settings } from 'lucide-react';
+import { Trash2, Lock, Cloud, Heart, WifiOff, Settings } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogFooter,
-  AlertDialogAction,
 } from './components/ui/alert-dialog';
 
 const MAX_CHARACTERS = 5000;
@@ -52,17 +50,45 @@ const OnlineCheck: React.FC = () => {
   );
 };
 
+// Terms and Conditions Component
 const TermsAndConditions: React.FC<{
   isOpen: boolean;
   onAccept: () => void;
 }> = ({ isOpen, onAccept }) => (
   <AlertDialog open={isOpen}>
     <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
-      {/* Terms content remains the same */}
+      <AlertDialogHeader>
+        <AlertDialogTitle className="flex items-center gap-2">
+          Terms & Conditions
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          <div className="space-y-4 text-left">
+            <h3 className="font-bold text-lg">Technical Guidelines</h3>
+            <ul className="list-disc list-inside space-y-2">
+              <li>No data is stored or saved</li>
+              <li>No tracking or analytics</li>
+              <li>All content is deleted immediately after use</li>
+            </ul>
+
+            <h3 className="font-bold text-lg mt-4">Legal Notice</h3>
+            <p className="text-sm">
+              This platform operates as a text processing tool with immediate data deletion. 
+              No responsibility is assumed for user-generated content.
+            </p>
+
+            <div className="bg-blue-50 p-3 rounded-md mt-4">
+              <p className="font-semibold text-sm">
+                This is a digital tool for processing text. Not a substitute for professional mental health services.
+              </p>
+            </div>
+          </div>
+        </AlertDialogDescription>
+      </AlertDialogHeader>
     </AlertDialogContent>
   </AlertDialog>
 );
 
+// Success Message Component
 const SuccessMessage: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
     <div className="bg-white/90 text-blue-600 px-8 py-4 rounded-lg shadow-lg animate-poof text-xl font-semibold">
@@ -70,43 +96,6 @@ const SuccessMessage: React.FC = () => (
     </div>
   </div>
 );
-
-const TopIllustration: React.FC = () => (
-  <svg 
-    viewBox="0 0 400 100" 
-    className="w-full h-32 mb-8 text-blue-100"
-  >
-    <path
-      d="M0,50 Q100,20 200,50 T400,50"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    />
-    <circle cx="300" cy="30" r="15" fill="currentColor" opacity="0.5" />
-    <circle cx="150" cy="40" r="10" fill="currentColor" opacity="0.3" />
-    <circle cx="50" cy="60" r="8" fill="currentColor" opacity="0.4" />
-  </svg>
-);
-
-const MindAnimation: React.FC<{ isAnimating: boolean }> = ({ isAnimating }) => {
-  if (!isAnimating) return null;
-  
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      <div className={`w-32 h-32 mx-auto ${isAnimating ? 'animate-mind-open' : ''}`}>
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <path 
-            d="M20,80 Q50,20 80,80" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2"
-            className="text-blue-500"
-          />
-        </svg>
-      </div>
-    </div>
-  );
-};
 
 // Font Size Slider Component
 const FontSizeSlider: React.FC<{
@@ -126,6 +115,45 @@ const FontSizeSlider: React.FC<{
     <span className="text-sm text-gray-500 min-w-[3ch]">{fontSize}px</span>
   </div>
 );
+
+// Top Illustration Component
+const TopIllustration: React.FC = () => (
+  <svg 
+    viewBox="0 0 400 100" 
+    className="w-full h-32 mb-8 text-blue-100"
+  >
+    <path
+      d="M0,50 Q100,20 200,50 T400,50"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <circle cx="300" cy="30" r="15" fill="currentColor" opacity="0.5" />
+    <circle cx="150" cy="40" r="10" fill="currentColor" opacity="0.3" />
+    <circle cx="50" cy="60" r="8" fill="currentColor" opacity="0.4" />
+  </svg>
+);
+
+// Mind Animation Component
+const MindAnimation: React.FC<{ isAnimating: boolean }> = ({ isAnimating }) => {
+  if (!isAnimating) return null;
+  
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      <div className={`w-32 h-32 mx-auto ${isAnimating ? 'animate-mind-open' : ''}`}>
+        <svg viewBox="0 0 100 100" className="w-full h-full">
+          <path 
+            d="M20,80 Q50,20 80,80" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2"
+            className="text-blue-500"
+          />
+        </svg>
+      </div>
+    </div>
+  );
+};
 
 // Main Component
 const Unburden: React.FC = () => {
