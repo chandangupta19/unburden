@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from './components/ui/card';
-import { Trash2, Lock, Cloud, Heart, WifiOff, Settings } from 'lucide-react';
+import { Shield, Check, Trash2, Lock, Cloud, Heart, WifiOff, Settings } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogAction,
 } from './components/ui/alert-dialog';
 
 const MAX_CHARACTERS = 5000;
@@ -59,6 +61,7 @@ const TermsAndConditions: React.FC<{
     <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
       <AlertDialogHeader>
         <AlertDialogTitle className="flex items-center gap-2">
+          <Shield className="text-green-500" />
           Terms & Conditions
         </AlertDialogTitle>
         <AlertDialogDescription>
@@ -84,6 +87,14 @@ const TermsAndConditions: React.FC<{
           </div>
         </AlertDialogDescription>
       </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogAction 
+          onClick={onAccept}
+          className="bg-green-500 hover:bg-green-600"
+        >
+          <Check className="mr-2" /> I Accept
+        </AlertDialogAction>
+      </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
 );
