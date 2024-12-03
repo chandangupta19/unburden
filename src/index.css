@@ -12,51 +12,23 @@ body {
   background-color: #f4f4f4;
 }
 
-@keyframes mindOpen {
+/* Fade away animation */
+@keyframes fadeAway {
   0% {
-    clip-path: polygon(0% 100%, 50% 100%, 100% 100%, 100% 100%, 0% 100%);
-    opacity: 1;
-  }
-  30% {
-    clip-path: polygon(0% 100%, 50% 85%, 100% 100%, 100% 100%, 0% 100%);
-    opacity: 0.9;
-  }
-  60% {
-    clip-path: polygon(0% 100%, 50% 60%, 100% 100%, 100% 100%, 0% 100%);
-    opacity: 0.7;
-  }
-  100% {
-    clip-path: polygon(0% 100%, 50% 0%, 100% 100%, 100% 100%, 0% 100%);
-    opacity: 0;
-  }
-}
-
-@keyframes thoughtFloat {
-  0% {
-    transform: translateY(0) translateX(0);
+    transform: translateY(0);
     opacity: 1;
   }
   50% {
-    transform: translateY(50px) translateX(-20px);
-    opacity: 0.7;
+    transform: translateY(-40px);
+    opacity: 0.5;
   }
   100% {
-    transform: translateY(150px) translateX(0);
+    transform: translateY(-80px);
     opacity: 0;
   }
 }
 
-@keyframes binAppear {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* Success message animation */
 @keyframes poofMessage {
   0% {
     opacity: 0;
@@ -72,22 +44,15 @@ body {
   }
 }
 
-.animate-mind-open {
-  animation: mindOpen 1s ease-in-out forwards;
-}
-
-.animate-thought-float {
-  animation: thoughtFloat 1.2s ease-in-out forwards;
-}
-
-.animate-bin-appear {
-  animation: binAppear 0.3s ease-out forwards;
+.animate-fade-away {
+  animation: fadeAway 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .animate-poof {
   animation: poofMessage 1.5s ease-out forwards;
 }
 
+/* Font size slider styles */
 .font-slider {
   -webkit-appearance: none;
   width: 100%;
@@ -110,4 +75,25 @@ body {
 
 .font-slider::-webkit-slider-thumb:hover {
   transform: scale(1.1);
+}
+
+/* About section styles */
+.about-section {
+  border-top: 1px solid #e5e7eb;
+  margin-top: 2rem;
+  padding-top: 2rem;
+}
+
+.about-highlight {
+  background: linear-gradient(to right, #f8fafc, #f1f5f9);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.about-contact {
+  color: #64748b;
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 1.5rem;
 }

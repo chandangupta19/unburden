@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from './components/ui/card';
-import { Shield, Check, Trash2, Lock, Cloud, Heart, WifiOff, Settings } from 'lucide-react';
+import { Shield, Check, Lock, Cloud, Heart, WifiOff, Settings } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -66,7 +66,14 @@ const TermsAndConditions: React.FC<{
         </AlertDialogTitle>
         <AlertDialogDescription>
           <div className="space-y-4 text-left">
-            <h3 className="font-bold text-lg">Technical Guidelines</h3>
+            <h3 className="font-bold text-lg">Age Requirement</h3>
+            <ul className="list-disc list-inside space-y-2">
+              <li>You must be at least 18 years old</li>
+              <li>You must meet the legal age requirement in your jurisdiction if higher than 18 years</li>
+              <li>By using this service, you confirm you meet these age requirements</li>
+            </ul>
+
+            <h3 className="font-bold text-lg mt-4">Technical Guidelines</h3>
             <ul className="list-disc list-inside space-y-2">
               <li>No data is stored or saved</li>
               <li>No tracking or analytics</li>
@@ -145,26 +152,59 @@ const TopIllustration: React.FC = () => (
   </svg>
 );
 
-// Mind Animation Component
-const MindAnimation: React.FC<{ isAnimating: boolean }> = ({ isAnimating }) => {
-  if (!isAnimating) return null;
-  
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      <div className={`w-32 h-32 mx-auto ${isAnimating ? 'animate-mind-open' : ''}`}>
-        <svg viewBox="0 0 100 100" className="w-full h-full">
-          <path 
-            d="M20,80 Q50,20 80,80" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2"
-            className="text-blue-500"
-          />
-        </svg>
-      </div>
+// About Section Component
+const AboutSection: React.FC = () => (
+  <div className="about-section">
+    <h2 className="text-2xl font-bold text-blue-600 mb-4">Release Your Emotions, Your Way</h2>
+    <p className="text-gray-600 mb-6">
+      Unburden is your digital space for emotional release—a modern alternative to traditional rage rooms. 
+      We understand that life can be overwhelming, and having a safe, private space to express emotions is essential. 
+      With Unburden, you can write down your thoughts, frustrations, or feelings, and when you're ready, 
+      a simple click of the "Release Thought" button erases them.
+    </p>
+    <p className="text-gray-600 mb-6">
+      This act of deleting your words is designed to help you reflect, process, and move forward.
+    </p>
+
+    <div className="about-highlight">
+      <h3 className="font-bold text-lg mb-4">Key Highlights:</h3>
+      <ul className="space-y-3">
+        <li className="flex items-start gap-2">
+          <Lock className="text-blue-500 mt-1 flex-shrink-0" size={20} />
+          <div>
+            <span className="font-semibold">Private by Design:</span>
+            <span className="text-gray-600"> Unburden does not collect or store your input, ensuring your thoughts remain yours alone.</span>
+          </div>
+        </li>
+        <li className="flex items-start gap-2">
+          <Heart className="text-pink-500 mt-1 flex-shrink-0" size={20} />
+          <div>
+            <span className="font-semibold">Empowering Ritual:</span>
+            <span className="text-gray-600"> The act of deleting your thoughts is a symbolic gesture of letting go.</span>
+          </div>
+        </li>
+        <li className="flex items-start gap-2">
+          <Cloud className="text-purple-500 mt-1 flex-shrink-0" size={20} />
+          <div>
+            <span className="font-semibold">Accessible Anywhere:</span>
+            <span className="text-gray-600"> A platform designed for use across devices, allowing you to Unburden wherever you are.</span>
+          </div>
+        </li>
+      </ul>
     </div>
-  );
-};
+
+    <div className="bg-blue-50 p-4 rounded-lg mt-6">
+      <p className="text-sm font-medium text-blue-800">
+        Disclaimer: Unburden is not a substitute for professional mental health advice or therapy. 
+        If you are experiencing severe emotional distress, please seek help from a qualified professional.
+      </p>
+    </div>
+
+    <div className="about-contact">
+      Contact us: umbrellalabs1@gmail.com
+    </div>
+  </div>
+);
 
 // Main Component
 const Unburden: React.FC = () => {
@@ -196,6 +236,7 @@ const Unburden: React.FC = () => {
     };
   }, []);
 
+  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = '200px';
@@ -220,7 +261,7 @@ const Unburden: React.FC = () => {
         setCharacterCount(0);
         setIsAnimating(false);
       }, 1500);
-    }, 1200);
+    }, 1000);
   };
 
   return (
@@ -231,12 +272,12 @@ const Unburden: React.FC = () => {
         onAccept={handleTermsAccept}
       />
       {showSuccess && <SuccessMessage />}
-      <div className="container mx-auto p-4 max-w-xl min-h-screen flex flex-col items-center justify-center">
+      <div className="container mx-auto p-4 max-w-xl min-h-screen">
         <TopIllustration />
         
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-600 mb-4">Unburden</h1>
-          <p className="text-xl text-blue-500">Release your thoughts into the digital void.</p>
+          <h1 className="text-4xl font-bold text-blue-600 mb-4">Release Your Emotions, Your Way</h1>
+          <p className="text-xl text-blue-500">Express freely, let go completely.</p>
         </div>
 
         <div className="flex justify-between w-full mb-8 flex-wrap gap-4 sm:flex-nowrap">
@@ -261,7 +302,6 @@ const Unburden: React.FC = () => {
         </div>
 
         <Card className="w-full p-6 shadow-lg relative overflow-hidden">
-          <MindAnimation isAnimating={isAnimating} />
           <textarea
             ref={textareaRef}
             value={thought}
@@ -272,8 +312,8 @@ const Unburden: React.FC = () => {
             style={{ fontSize: `${fontSize}px` }}
             className={`w-full p-4 border rounded-md min-h-[200px]
               focus:ring-2 focus:ring-blue-200 transition-all duration-300
-              text-base resize-none bg-transparent
-              ${isAnimating ? 'animate-thought-float' : ''}`}
+              text-base resize-none
+              ${isAnimating ? 'animate-fade-away' : ''}`}
             placeholder="Pour your heart out..."
             maxLength={MAX_CHARACTERS}
             disabled={isAnimating}
@@ -282,14 +322,6 @@ const Unburden: React.FC = () => {
           <div className="absolute bottom-4 right-4 bg-white text-sm text-gray-500 px-3 py-1 rounded-full shadow-sm">
             {characterCount}/{MAX_CHARACTERS}
           </div>
-
-          {isAnimating && (
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center animate-bin-appear">
-                <Trash2 className="text-gray-400" size={32} />
-              </div>
-            </div>
-          )}
         </Card>
 
         <div className="w-full mt-4 mb-6">
@@ -299,7 +331,7 @@ const Unburden: React.FC = () => {
         <button
           onClick={handleActionClick}
           disabled={!thought || isAnimating}
-          className={`px-8 py-3 rounded-full text-white font-medium
+          className={`w-full px-8 py-3 rounded-full text-white font-medium
             transition-all duration-300 transform hover:scale-105
             ${thought && !isAnimating ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-300'}
             disabled:opacity-50 disabled:cursor-not-allowed`}
@@ -307,9 +339,11 @@ const Unburden: React.FC = () => {
           Release Thoughts
         </button>
 
-        <p className="text-gray-500 text-sm mt-4">
+        <p className="text-gray-500 text-sm mt-4 text-center">
           Click the button to release your thoughts
         </p>
+
+        <AboutSection />
       </div>
     </>
   );
