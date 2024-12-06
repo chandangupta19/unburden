@@ -6,13 +6,13 @@ const AboutUnburden: React.FC = () => {
   return (
     <div className="container mx-auto p-4 max-w-3xl">
       <div className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-blue-600 mb-4">About Unburden</h1>
+        <h1 className="text-4xl font-bold text-blue-600 mb-4">About UnburdenHQ</h1>
       </div>
 
       <div className="prose max-w-none">
         <p className="text-gray-600 mb-6">
-          Unburden is your digital space for emotional release. We understand that life can be overwhelming, 
-          and having a safe, private space to express emotions is essential. With Unburden, you can write down 
+          UnburdenHQ is your digital space for emotional release. We understand that life can be overwhelming, 
+          and having a safe, private space to express emotions is essential. With UnburdenHQ, you can write down 
           your thoughts, frustrations, or feelings, and when you're ready, a simple click of the "Release Thoughts" 
           button erases them.
         </p>
@@ -30,7 +30,7 @@ const AboutUnburden: React.FC = () => {
               </div>
               <div>
                 <h3 className="font-bold text-lg mb-2">Secure & Private</h3>
-                <p className="text-gray-600">Your thoughts remain completely private with no data storage or tracking.</p>
+                <p className="text-gray-600">Your thoughts remain completely private with no data storage.</p>
               </div>
             </div>
 
@@ -58,7 +58,7 @@ const AboutUnburden: React.FC = () => {
 
         <div className="bg-blue-50 p-6 rounded-lg mb-8">
           <p className="text-sm font-medium text-blue-800">
-            <strong>Disclaimer:</strong> Unburden is not a substitute for professional mental health advice or therapy. 
+            <strong>Disclaimer:</strong> UnburdenHQ is not a substitute for professional mental health advice or therapy. 
             If you are experiencing severe emotional distress, please seek help from a qualified professional.
           </p>
         </div>

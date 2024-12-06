@@ -13,7 +13,7 @@ const TermsAndConditions: React.FC = () => {
         <section>
           <h2 className="text-2xl font-bold mb-4">1. ACCEPTANCE OF TERMS</h2>
           <p>
-            By accessing and using Unburden ("the Platform"), you agree to be bound by these Terms and Conditions.
+            By accessing and using UnburdenHQ ("the Platform"), you agree to be bound by these Terms and Conditions.
           </p>
         </section>
 
@@ -28,7 +28,7 @@ const TermsAndConditions: React.FC = () => {
         <section>
           <h2 className="text-2xl font-bold mb-4">3. PLATFORM PURPOSE</h2>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Unburden is a digital platform for expressing thoughts and emotions</li>
+            <li>UnburdenHQ is a digital platform for expressing thoughts and emotions</li>
             <li>It is NOT a substitute for professional mental health services</li>
             <li>We do not provide medical advice, counseling, or therapy</li>
           </ul>
@@ -99,7 +99,15 @@ const TermsAndConditions: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">10. CONTACT</h2>
+          <h2 className="text-2xl font-bold mb-4">10. THIRD-PARTY SERVICES</h2>
+          <p>
+            The Platform uses third-party services for analytics and functionality. By using UnburdenHQ, you agree 
+            to be bound by the terms of service and privacy policies of these third-party service providers.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold mb-4">11. CONTACT</h2>
           <p>
             For questions about these terms, contact:
             <br />
@@ -108,9 +116,9 @@ const TermsAndConditions: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">11. ACKNOWLEDGMENT</h2>
+          <h2 className="text-2xl font-bold mb-4">12. ACKNOWLEDGMENT</h2>
           <p>
-            By using Unburden, you acknowledge that you have read, understood, and agree to be bound by these 
+            By using UnburdenHQ, you acknowledge that you have read, understood, and agree to be bound by these 
             Terms and Conditions and our Privacy Policy.
           </p>
         </section>
@@ -119,7 +127,7 @@ const TermsAndConditions: React.FC = () => {
       <footer className="mt-12 pt-4 border-t">
         <nav className="flex justify-center gap-6">
           <Link to="/" className="text-blue-500 hover:underline">Home</Link>
-          <Link to="/about" className="text-blue-500 hover:underline">About Unburden</Link>
+          <Link to="/about" className="text-blue-500 hover:underline">About UnburdenHQ</Link>
           <Link to="/privacy" className="text-blue-500 hover:underline">Privacy Policy</Link>
         </nav>
       </footer>

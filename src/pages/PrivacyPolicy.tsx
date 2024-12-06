@@ -13,7 +13,7 @@ const PrivacyPolicy: React.FC = () => {
         <section>
           <h2 className="text-2xl font-bold mb-4">1. INTRODUCTION</h2>
           <p>
-            Welcome to Unburden ("the Platform"). This Privacy Policy explains how we handle any information when you use the Platform. 
+            Welcome to UnburdenHQ ("the Platform"). This Privacy Policy explains how we handle any information when you use the Platform. 
             Our core principle is to provide a space where you can express yourself freely while maintaining your privacy.
           </p>
         </section>
@@ -80,7 +80,16 @@ const PrivacyPolicy: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">5. CHANGES TO THIS POLICY</h2>
+          <h2 className="text-2xl font-bold mb-4">5. THIRD-PARTY SERVICES</h2>
+          <p>
+            We use third-party services for basic analytics and platform functionality. By using UnburdenHQ, you acknowledge 
+            that these services may collect information as described in this Privacy Policy and you agree to their respective 
+            terms of service and privacy policies.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold mb-4">6. CHANGES TO THIS POLICY</h2>
           <ul className="list-disc pl-6 space-y-2">
             <li>We reserve the right to modify this Privacy Policy at any time</li>
             <li>Continued use after changes constitutes acceptance</li>
@@ -90,7 +99,7 @@ const PrivacyPolicy: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">6. CONTACT US</h2>
+          <h2 className="text-2xl font-bold mb-4">7. CONTACT US</h2>
           <p>
             For any questions about this Privacy Policy, please contact us at:
             <br />
@@ -99,12 +108,13 @@ const PrivacyPolicy: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">7. CONSENT</h2>
+          <h2 className="text-2xl font-bold mb-4">8. CONSENT</h2>
           <p>
-            By using Unburden, you acknowledge and agree to:
+            By using UnburdenHQ, you acknowledge and agree to:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>The collection of basic analytics data through our server-side analytics tools as described above</li>
+            <li>The terms and conditions of our third-party service providers</li>
             <li>All privacy terms outlined in this policy</li>
           </ul>
         </section>
@@ -113,7 +123,7 @@ const PrivacyPolicy: React.FC = () => {
       <footer className="mt-12 pt-4 border-t">
         <nav className="flex justify-center gap-6">
           <Link to="/" className="text-blue-500 hover:underline">Home</Link>
-          <Link to="/about" className="text-blue-500 hover:underline">About Unburden</Link>
+          <Link to="/about" className="text-blue-500 hover:underline">About UnburdenHQ</Link>
           <Link to="/terms" className="text-blue-500 hover:underline">Terms & Conditions</Link>
         </nav>
       </footer>

@@ -14,7 +14,6 @@ import { Link } from 'react-router-dom';
 
 const MAX_CHARACTERS = 5000;
 
-// Online Check Component
 const OnlineCheck: React.FC = () => {
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
 
@@ -43,7 +42,7 @@ const OnlineCheck: React.FC = () => {
           </AlertDialogTitle>
           <AlertDialogDescription>
             <p className="mb-4">
-              First-time access to Unburden requires an internet connection to verify and accept the latest terms and conditions.
+              First-time access to UnburdenHQ requires an internet connection to verify and accept the latest terms and conditions.
             </p>
             <p>Please connect to the internet and refresh the page.</p>
           </AlertDialogDescription>
@@ -53,7 +52,6 @@ const OnlineCheck: React.FC = () => {
   );
 };
 
-// Terms and Conditions Component
 const TermsAndConditions: React.FC<{
   isOpen: boolean;
   onAccept: () => void;
@@ -68,7 +66,7 @@ const TermsAndConditions: React.FC<{
         <AlertDialogDescription>
           <div className="space-y-4 text-left">
             <p className="text-sm">
-              By using Unburden, you confirm:
+              By using UnburdenHQ, you confirm:
             </p>
             <ul className="list-disc list-inside space-y-2">
               <li>You are at least 18 years old</li>
@@ -91,7 +89,6 @@ const TermsAndConditions: React.FC<{
   </AlertDialog>
 );
 
-// Success Message Component
 const SuccessMessage: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
     <div className="bg-white/90 text-blue-600 px-8 py-4 rounded-lg shadow-lg animate-poof text-xl font-semibold">
@@ -100,7 +97,6 @@ const SuccessMessage: React.FC = () => (
   </div>
 );
 
-// Top Illustration Component
 const TopIllustration: React.FC = () => (
   <svg 
     viewBox="0 0 400 100" 
@@ -118,7 +114,6 @@ const TopIllustration: React.FC = () => (
   </svg>
 );
 
-// Main Component
 const Unburden: React.FC = () => {
   const [thought, setThought] = useState<string>('');
   const [characterCount, setCharacterCount] = useState<number>(0);
@@ -128,7 +123,6 @@ const Unburden: React.FC = () => {
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Online status handler
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
@@ -148,13 +142,11 @@ const Unburden: React.FC = () => {
     };
   }, []);
 
-  // Textarea auto-resize handler
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = '200px';
-      const currentScrollHeight = textareaRef.current.scrollHeight;
-      textareaRef.current.style.height = 
-        Math.max(200, currentScrollHeight) + 'px';
+      textareaRef.current.style.height = 'auto';
+      const scrollHeight = textareaRef.current.scrollHeight;
+      textareaRef.current.style.height = Math.max(200, scrollHeight) + 'px';
     }
   }, [thought]);
 
@@ -255,7 +247,7 @@ const Unburden: React.FC = () => {
         </div>
 
         <footer className="footer-links">
-          <Link to="/about" className="footer-link">About Unburden</Link>
+          <Link to="/about" className="footer-link">About UnburdenHQ</Link>
           <Link to="/privacy" className="footer-link">Privacy Policy</Link>
           <Link to="/terms" className="footer-link">Terms & Conditions</Link>
         </footer>
