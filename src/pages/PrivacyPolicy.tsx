@@ -1,37 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-const FloatingCircle = ({ size, delay = 0, className = '' }: { size: number; delay?: number; className?: string }) => (
-  <div 
-    className={`circle-decoration animate-float ${className}`}
-    style={{
-      width: size,
-      height: size,
-      animationDelay: `${delay}s`,
-      background: 'rgba(255, 255, 255, 0.5)'
-    }}
-  />
-);
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="glass-panel rounded-lg p-6 mb-8">
-    <h2 className="text-2xl font-bold mb-4 text-white neon-text">{title}</h2>
+    <h2 className="text-2xl font-bold mb-4 text-white">{title}</h2>
     {children}
   </section>
 );
 
 const PrivacyPolicy: React.FC = () => {
-  return (
-    <div className="min-h-screen grid-pattern relative overflow-hidden">
-      {/* Decorative Elements */}
-      <FloatingCircle size={10} className="absolute top-[20%] right-[30%]" />
-      <FloatingCircle size={6} delay={1} className="absolute top-[40%] left-[20%]" />
-      <FloatingCircle size={8} delay={2} className="absolute top-[60%] right-[20%]" />
-      <FloatingCircle size={4} delay={3} className="absolute top-[30%] left-[30%]" />
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-      <div className="container mx-auto p-4 max-w-3xl relative z-10">
+  return (
+    <div className="min-h-screen grid-pattern">
+      <div className="container mx-auto p-4 max-w-3xl">
         <div className="mb-12 text-center">
-          <h1 className="text-5xl md:text-6xl font-black mb-4 neon-text">Privacy Policy</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">Privacy Policy</h1>
           <p className="text-white/60">Last Updated: December 2024</p>
         </div>
 

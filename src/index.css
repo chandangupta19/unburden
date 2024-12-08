@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --gradient-start: #FF3CAC;
+  --gradient-start: #6B1254;
   --gradient-middle: #784BA0;
   --gradient-end: #2B86C5;
   --text-primary: #FFFFFF;
@@ -32,11 +32,39 @@ body {
   background-size: 40px 40px;
 }
 
-/* Circular Elements */
-.circle-decoration {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
+/* Enhanced input box styling */
+.main-input-box {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  transition: all 0.3s ease;
+}
+
+.main-input-box:focus-within {
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.5);
+}
+
+/* Corner Animations */
+@keyframes cornerFlash {
+  0% { border-color: rgba(255, 255, 255, 0.2); }
+  50% { border-color: rgba(255, 255, 255, 0.8); }
+  100% { border-color: rgba(255, 255, 255, 0.2); }
+}
+
+.animate-corner {
+  animation: cornerFlash 2s ease-in-out infinite;
+}
+
+/* Line growing animation */
+@keyframes lineGrow {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.animate-line {
+  animation: lineGrow 1s ease-out forwards;
 }
 
 /* Enhanced fade animation */
@@ -89,41 +117,12 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
-/* Modern Glassmorphism */
+/* Glassmorphism */
 .glass-panel {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-}
-
-/* Custom Textarea Styles */
-.modern-textarea {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  transition: all 0.3s ease;
-  transform: perspective(1000px) rotateX(2deg);
-}
-
-.modern-textarea:focus {
-  outline: none;
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: perspective(1000px) rotateX(0);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-/* Modern Button Styles */
-.modern-button {
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--gradient-end);
-  transform: perspective(1000px) rotateX(2deg);
-  transition: all 0.3s ease;
-}
-
-.modern-button:hover {
-  transform: perspective(1000px) rotateX(0) translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
 /* Footer styles */
@@ -147,11 +146,14 @@ body {
   text-shadow: 0 0 10px rgba(255,255,255,0.5);
 }
 
-/* Neon Text Effect */
-.neon-text {
-  text-shadow: 0 0 10px rgba(255,255,255,0.5),
-               0 0 20px rgba(255,255,255,0.3),
-               0 0 30px rgba(255,255,255,0.2);
+/* Hide scrollbar but maintain functionality */
+textarea {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+textarea::-webkit-scrollbar {
+  display: none;
 }
 
 /* Mobile Optimizations */
@@ -165,14 +167,4 @@ body {
   .grid-pattern {
     background-size: 20px 20px;
   }
-}
-
-/* Hide scrollbar but maintain functionality */
-textarea {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-textarea::-webkit-scrollbar {
-  display: none;
 }

@@ -13,29 +13,8 @@ import { Link } from 'react-router-dom';
 
 const MAX_CHARACTERS = 5000;
 
-// Decorative circle component
-const FloatingCircle = ({ size, delay = 0, className = '' }: { size: number; delay?: number; className?: string }) => (
-  <div 
-    className={`circle-decoration animate-float ${className}`}
-    style={{
-      width: size,
-      height: size,
-      animationDelay: `${delay}s`,
-      background: 'rgba(255, 255, 255, 0.5)'
-    }}
-  />
-);
-
-// Circular background element
-const CircularDecoration = ({ size, opacity = 0.1, className = '' }: { size: number; opacity?: number; className?: string }) => (
-  <div 
-    className={`circle-decoration ${className}`}
-    style={{
-      width: size,
-      height: size,
-      border: `2px solid rgba(255, 255, 255, ${opacity})`
-    }}
-  />
+const CornerAccent = ({ className = '' }: { className?: string }) => (
+  <div className={`w-10 h-10 border-l-2 border-t-2 animate-corner ${className}`} />
 );
 
 const OnlineCheck: React.FC = () => {
@@ -96,7 +75,7 @@ const TermsAndConditions: React.FC<{
               <li>You are at least 18 years old</li>
               <li>You must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years</li>
               <li>This is not a substitute for professional mental health services</li>
-              <li>You accept our <Link to="/terms" className="text-white hover:text-white/80">Terms & Conditions</Link> and <Link to="/privacy" className="text-white hover:text-white/80">Privacy Policy</Link></li>
+              <li>You accept our <Link to="/terms" className="underline text-white hover:text-white/80">Terms & Conditions</Link> and <Link to="/privacy" className="underline text-white hover:text-white/80">Privacy Policy</Link></li>
             </ul>
           </div>
         </AlertDialogDescription>
@@ -104,7 +83,7 @@ const TermsAndConditions: React.FC<{
       <AlertDialogFooter>
         <AlertDialogAction 
           onClick={onAccept}
-          className="modern-button"
+          className="glass-panel px-4 py-2 text-white hover:bg-white/20"
         >
           <Check className="mr-2" /> I Accept
         </AlertDialogAction>
@@ -115,7 +94,7 @@ const TermsAndConditions: React.FC<{
 
 const SuccessMessage: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-    <div className="glass-panel px-8 py-4 rounded-lg animate-poof text-xl font-semibold neon-text">
+    <div className="glass-panel px-8 py-4 rounded-lg animate-poof text-xl font-semibold">
       Poof... gone
     </div>
   </div>
@@ -129,6 +108,10 @@ const Unburden: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -172,26 +155,21 @@ const Unburden: React.FC = () => {
 
   return (
     <div className="min-h-screen grid-pattern relative overflow-hidden">
-      {/* Decorative Elements */}
-      <CircularDecoration size={500} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-      <CircularDecoration size={400} opacity={0.15} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-      <CircularDecoration size={300} opacity={0.2} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-      
-      {/* Floating Circles */}
-      <FloatingCircle size={10} className="absolute top-[20%] right-[30%]" />
-      <FloatingCircle size={6} delay={1} className="absolute top-[40%] left-[20%]" />
-      <FloatingCircle size={8} delay={2} className="absolute top-[60%] right-[20%]" />
-      <FloatingCircle size={4} delay={3} className="absolute top-[30%] left-[30%]" />
-
       <div className="container mx-auto p-4 relative z-10">
-        {/* Title Section */}
-        <h1 className="text-6xl md:text-7xl font-black text-center mt-12 mb-8 neon-text">
-          UNBURDEN
-        </h1>
-        
-        {/* Main Content Area */}
-        <div className="max-w-3xl mx-auto mt-16">
-          <div className="relative">
+        <div className="mb-16 mt-8">
+          <h1 className="text-[80px] md:text-[120px] font-black text-white leading-none tracking-tight text-center">
+            UNBURDEN
+          </h1>
+          <div className="h-1 bg-white/50 mx-auto w-40 animate-line" />
+        </div>
+
+        <div className="relative max-w-3xl mx-auto">
+          <CornerAccent className="absolute -top-2 -left-2" />
+          <CornerAccent className="absolute -top-2 -right-2 transform scale-x-[-1]" />
+          <CornerAccent className="absolute -bottom-2 -left-2 transform scale-y-[-1]" />
+          <CornerAccent className="absolute -bottom-2 -right-2 transform scale-[-1]" />
+
+          <div className="main-input-box rounded-lg p-1">
             <textarea
               ref={textareaRef}
               value={thought}
@@ -199,7 +177,8 @@ const Unburden: React.FC = () => {
                 setThought(e.target.value);
                 setCharacterCount(e.target.value.length);
               }}
-              className={`w-full p-6 modern-textarea rounded-lg min-h-[300px]
+              className={`w-full p-6 bg-transparent text-white min-h-[200px] rounded-lg
+                focus:outline-none resize-none placeholder-white/50
                 ${isAnimating ? 'animate-fade-away' : ''}`}
               placeholder="Release your thoughts here..."
               maxLength={MAX_CHARACTERS}
@@ -210,20 +189,20 @@ const Unburden: React.FC = () => {
               {characterCount}/{MAX_CHARACTERS}
             </div>
           </div>
-
-          <div className="text-center mt-12">
-            <button
-              onClick={handleRelease}
-              disabled={!thought || isAnimating}
-              className={`modern-button px-12 py-4 rounded-lg font-bold text-xl
-                ${!thought || isAnimating ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'}`}
-            >
-              Release Thoughts
-            </button>
-          </div>
         </div>
 
-        <footer className="footer-links mt-auto">
+        <div className="text-center mt-12">
+          <button
+            onClick={handleRelease}
+            disabled={!thought || isAnimating}
+            className={`glass-panel px-12 py-4 rounded-lg font-bold text-xl
+              ${thought && !isAnimating ? 'hover:bg-white/20' : 'opacity-50 cursor-not-allowed'}`}
+          >
+            Release Thoughts
+          </button>
+        </div>
+
+        <footer className="footer-links">
           <Link to="/about" className="footer-link">About UnburdenHQ</Link>
           <Link to="/privacy" className="footer-link">Privacy Policy</Link>
           <Link to="/terms" className="footer-link">Terms & Conditions</Link>
