@@ -14,6 +14,14 @@ import { Link } from 'react-router-dom';
 
 const MAX_CHARACTERS = 5000;
 
+const DiagonalElement = ({ className = '' }: { className?: string }) => (
+  <div className={`diagonal-element bg-accent h-20 ${className}`} />
+);
+
+const CornerAccent = ({ className = '' }: { className?: string }) => (
+  <div className={`w-10 h-10 border-l-2 border-t-2 border-primary ${className}`} />
+);
+
 const OnlineCheck: React.FC = () => {
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
 
@@ -37,7 +45,7 @@ const OnlineCheck: React.FC = () => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
-            <WifiOff className="text-red-500" />
+            <WifiOff className="text-primary" />
             Internet Connection Required
           </AlertDialogTitle>
           <AlertDialogDescription>
@@ -60,7 +68,7 @@ const TermsAndConditions: React.FC<{
     <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
       <AlertDialogHeader>
         <AlertDialogTitle className="flex items-center gap-2">
-          <Shield className="text-green-500" />
+          <Shield className="text-primary" />
           Terms & Conditions
         </AlertDialogTitle>
         <AlertDialogDescription>
@@ -72,7 +80,7 @@ const TermsAndConditions: React.FC<{
               <li>You are at least 18 years old</li>
               <li>You must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years</li>
               <li>This is not a substitute for professional mental health services</li>
-              <li>You accept our <Link to="/terms" className="text-blue-500 hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="text-blue-500 hover:underline">Privacy Policy</Link></li>
+              <li>You accept our <Link to="/terms" className="text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link></li>
             </ul>
           </div>
         </AlertDialogDescription>
@@ -80,7 +88,7 @@ const TermsAndConditions: React.FC<{
       <AlertDialogFooter>
         <AlertDialogAction 
           onClick={onAccept}
-          className="bg-green-500 hover:bg-green-600"
+          className="brutalist-button text-white hover:border-primary"
         >
           <Check className="mr-2" /> I Accept
         </AlertDialogAction>
@@ -91,27 +99,10 @@ const TermsAndConditions: React.FC<{
 
 const SuccessMessage: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-    <div className="bg-white/90 text-blue-600 px-8 py-4 rounded-lg shadow-lg animate-poof text-xl font-semibold">
+    <div className="bg-bg-dark text-primary px-8 py-4 rounded animate-poof text-xl font-bold">
       Poof... gone
     </div>
   </div>
-);
-
-const TopIllustration: React.FC = () => (
-  <svg 
-    viewBox="0 0 400 100" 
-    className="w-full h-32 mb-8 text-blue-100"
-  >
-    <path
-      d="M0,50 Q100,20 200,50 T400,50"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    />
-    <circle cx="300" cy="30" r="15" fill="currentColor" opacity="0.5" />
-    <circle cx="150" cy="40" r="10" fill="currentColor" opacity="0.3" />
-    <circle cx="50" cy="60" r="8" fill="currentColor" opacity="0.4" />
-  </svg>
 );
 
 const Unburden: React.FC = () => {
@@ -124,14 +115,8 @@ const Unburden: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    const handleOnline = () => {
-      setIsOnline(true);
-      window.location.reload();
-    };
-    
-    const handleOffline = () => {
-      setIsOnline(false);
-    };
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -145,8 +130,7 @@ const Unburden: React.FC = () => {
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      const scrollHeight = textareaRef.current.scrollHeight;
-      textareaRef.current.style.height = Math.max(200, scrollHeight) + 'px';
+      textareaRef.current.style.height = `${Math.max(200, textareaRef.current.scrollHeight)}px`;
     }
   }, [thought]);
 
@@ -155,7 +139,7 @@ const Unburden: React.FC = () => {
     setShowTerms(false);
   };
 
-  const handleActionClick = () => {
+  const handleRelease = () => {
     if (!thought || isAnimating) return;
     
     setIsAnimating(true);
@@ -171,43 +155,24 @@ const Unburden: React.FC = () => {
   };
 
   return (
-    <>
-      <OnlineCheck />
-      <TermsAndConditions 
-        isOpen={showTerms}
-        onAccept={handleTermsAccept}
-      />
-      {showSuccess && <SuccessMessage />}
-      <div className="container mx-auto p-4 max-w-xl min-h-screen">
-        <TopIllustration />
-        
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-600 mb-4">Unburden</h1>
-          <p className="text-xl text-blue-500">Release Your Emotions, Your Way</p>
+    <div className="min-h-screen grid-pattern">
+      <DiagonalElement className="absolute top-0 left-0" />
+      <DiagonalElement className="absolute top-0 right-0 transform -scale-x-100" />
+
+      <div className="container mx-auto p-4 relative z-10">
+        <div className="mb-16 mt-8">
+          <h1 className="text-[120px] font-black text-white leading-none tracking-tight mb-4">
+            UN<br />BURDEN
+          </h1>
+          <div className="h-1 w-40 bg-primary animate-line" />
         </div>
 
-        <div className="flex justify-between w-full mb-8 flex-wrap gap-4 sm:flex-nowrap">
-          <div className="flex flex-col items-center flex-1">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2 transition-transform hover:scale-105">
-              <Lock className="text-blue-500" size={24} />
-            </div>
-            <span className="text-sm text-blue-600">Secure & Private</span>
-          </div>
-          <div className="flex flex-col items-center flex-1">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-2 transition-transform hover:scale-105">
-              <Cloud className="text-purple-500" size={24} />
-            </div>
-            <span className="text-sm text-purple-600">Feel Lighter</span>
-          </div>
-          <div className="flex flex-col items-center flex-1">
-            <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mb-2 transition-transform hover:scale-105">
-              <Heart className="text-pink-500" size={24} />
-            </div>
-            <span className="text-sm text-pink-600">Express Yourself</span>
-          </div>
-        </div>
+        <div className="relative max-w-3xl mx-auto">
+          <CornerAccent className="absolute -top-2 -left-2 animate-corner" />
+          <CornerAccent className="absolute -top-2 -right-2 transform scale-x-[-1] animate-corner" />
+          <CornerAccent className="absolute -bottom-2 -left-2 transform scale-y-[-1] animate-corner" />
+          <CornerAccent className="absolute -bottom-2 -right-2 transform scale-[-1] animate-corner" />
 
-        <Card className="w-full p-6 shadow-lg relative overflow-hidden">
           <textarea
             ref={textareaRef}
             value={thought}
@@ -215,35 +180,27 @@ const Unburden: React.FC = () => {
               setThought(e.target.value);
               setCharacterCount(e.target.value.length);
             }}
-            className={`w-full p-4 border rounded-md min-h-[200px]
-              focus:ring-2 focus:ring-blue-200 transition-all duration-300
-              text-base resize-none
+            className={`w-full p-6 brutalist-textarea text-white min-h-[200px]
               ${isAnimating ? 'animate-fade-away' : ''}`}
             placeholder="Pour your heart out..."
             maxLength={MAX_CHARACTERS}
             disabled={isAnimating}
           />
           
-          <div className="absolute bottom-4 right-4 bg-white text-sm text-gray-500 px-3 py-1 rounded-full shadow-sm">
+          <div className="absolute bottom-4 right-4 text-text-light text-sm">
             {characterCount}/{MAX_CHARACTERS}
           </div>
-        </Card>
+        </div>
 
-        <div className="text-center mt-6">
+        <div className="text-center mt-12">
           <button
-            onClick={handleActionClick}
+            onClick={handleRelease}
             disabled={!thought || isAnimating}
-            className={`px-8 py-3 rounded-full text-white font-medium
-              transition-all duration-300 transform hover:scale-105
-              ${thought && !isAnimating ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-300'}
-              disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`brutalist-button px-12 py-4 text-white font-bold text-xl
+              ${thought && !isAnimating ? 'hover:border-primary' : 'opacity-50 cursor-not-allowed'}`}
           >
             Release Thoughts
           </button>
-
-          <p className="text-gray-500 text-sm mt-4">
-            Click the button to release your thoughts
-          </p>
         </div>
 
         <footer className="footer-links">
@@ -252,7 +209,11 @@ const Unburden: React.FC = () => {
           <Link to="/terms" className="footer-link">Terms & Conditions</Link>
         </footer>
       </div>
-    </>
+
+      <OnlineCheck />
+      <TermsAndConditions isOpen={showTerms} onAccept={handleTermsAccept} />
+      {showSuccess && <SuccessMessage />}
+    </div>
   );
 };
 

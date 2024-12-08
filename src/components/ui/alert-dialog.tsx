@@ -19,8 +19,8 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+      <div className="bg-bg-darker text-white rounded max-w-md w-full border border-accent modal-brutalist">
         {children}
       </div>
     </div>
@@ -28,23 +28,23 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
 };
 
 export const AlertDialogContent: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={className}>{children}</div>
+  <div className={`p-6 ${className}`}>{children}</div>
 );
 
 export const AlertDialogHeader: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`mb-4 ${className}`}>{children}</div>
+  <div className={`mb-4 modal-brutalist-header ${className}`}>{children}</div>
 );
 
 export const AlertDialogTitle: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <h2 className={`text-xl font-bold ${className}`}>{children}</h2>
+  <h2 className={`text-xl font-bold text-white mb-2 ${className}`}>{children}</h2>
 );
 
 export const AlertDialogDescription: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`text-sm text-gray-600 ${className}`}>{children}</div>
+  <div className={`text-sm text-text-light ${className}`}>{children}</div>
 );
 
 export const AlertDialogFooter: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`flex justify-end space-x-2 mt-4 ${className}`}>{children}</div>
+  <div className={`flex justify-end space-x-2 mt-6 ${className}`}>{children}</div>
 );
 
 export const AlertDialogAction: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ 
@@ -53,7 +53,7 @@ export const AlertDialogAction: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
   ...props 
 }) => (
   <button 
-    className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${className}`}
+    className={`brutalist-button px-4 py-2 text-white ${className}`}
     {...props}
   >
     {children}
@@ -66,9 +66,11 @@ export const AlertDialogCancel: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
   ...props 
 }) => (
   <button 
-    className={`px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 ${className}`}
+    className={`px-4 py-2 text-text-light hover:text-white transition-colors ${className}`}
     {...props}
   >
     {children}
   </button>
 );
+
+export default AlertDialog;
