@@ -29,38 +29,19 @@ const PrivacyPolicy: React.FC = () => {
           </ul>
 
           <h3 className="text-xl font-bold mt-6 mb-3">2.2 Site Analytics</h3>
-          <p>We use industry-standard server-side analytics that collects:</p>
-          
-          <div className="bg-gray-50 p-6 rounded-lg my-4">
-            <p className="font-bold mb-2">What is collected:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>IP addresses</li>
-              <li>Country/region of access</li>
-              <li>Pages visited</li>
-              <li>Browser type</li>
-              <li>Visit duration</li>
-              <li>Other standard analytics data</li>
-            </ul>
-          </div>
+          <p>
+            We use basic analytics to understand general site usage. This includes standard, anonymous usage data 
+            that helps us improve the platform.
+          </p>
 
           <div className="bg-gray-50 p-6 rounded-lg my-4">
             <p className="font-bold mb-2">What is NOT collected:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Your written content</li>
               <li>Personal identification</li>
-              <li>Cookies or tracking scripts</li>
               <li>User accounts or profiles</li>
             </ul>
           </div>
-
-          <p className="mt-4">
-            <strong>Why we collect this:</strong>
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>To understand site usage</li>
-            <li>To improve user experience</li>
-            <li>To monitor site performance</li>
-          </ul>
         </section>
 
         <section>
@@ -80,16 +61,7 @@ const PrivacyPolicy: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">5. THIRD-PARTY SERVICES</h2>
-          <p>
-            We use third-party services for basic analytics and platform functionality. By using UnburdenHQ, you acknowledge 
-            that these services may collect information as described in this Privacy Policy and you agree to their respective 
-            terms of service and privacy policies.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold mb-4">6. CHANGES TO THIS POLICY</h2>
+          <h2 className="text-2xl font-bold mb-4">5. CHANGES TO THIS POLICY</h2>
           <ul className="list-disc pl-6 space-y-2">
             <li>We reserve the right to modify this Privacy Policy at any time</li>
             <li>Continued use after changes constitutes acceptance</li>
@@ -99,7 +71,7 @@ const PrivacyPolicy: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">7. CONTACT US</h2>
+          <h2 className="text-2xl font-bold mb-4">6. CONTACT US</h2>
           <p>
             For any questions about this Privacy Policy, please contact us at:
             <br />
@@ -108,14 +80,14 @@ const PrivacyPolicy: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">8. CONSENT</h2>
+          <h2 className="text-2xl font-bold mb-4">7. CONSENT</h2>
           <p>
             By using UnburdenHQ, you acknowledge and agree to:
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>The collection of basic analytics data through our server-side analytics tools as described above</li>
-            <li>The terms and conditions of our third-party service providers</li>
+            <li>The collection of basic analytics data as described above</li>
             <li>All privacy terms outlined in this policy</li>
+            <li>By agreeing to these terms, you agree to terms and conditions of our third-party service providers</li>
           </ul>
         </section>
       </div>

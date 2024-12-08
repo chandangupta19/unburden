@@ -82,3 +82,8 @@ body {
     gap: 1rem;
   }
 }
+
+/* Hide scrollbar but maintain functionality */
+textarea {
+  overflow: hidden;
+}

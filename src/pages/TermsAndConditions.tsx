@@ -13,15 +13,16 @@ const TermsAndConditions: React.FC = () => {
         <section>
           <h2 className="text-2xl font-bold mb-4">1. ACCEPTANCE OF TERMS</h2>
           <p>
-            By accessing and using UnburdenHQ ("the Platform"), you agree to be bound by these Terms and Conditions.
+            By accessing and using UnburdenHQ ("the Platform"), you agree to be bound by these Terms and Conditions
+            and our Privacy Policy.
           </p>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold mb-4">2. AGE REQUIREMENT</h2>
           <ul className="list-disc pl-6 space-y-2">
-            <li>You must be at least 18 years old.</li>
-            <li>Or you must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years.</li>
+            <li>You must be at least 18 years old to use the Platform</li>
+            <li>If your location requires a higher minimum age, you must meet that requirement</li>
           </ul>
         </section>
 
@@ -49,23 +50,34 @@ const TermsAndConditions: React.FC = () => {
         <section>
           <h2 className="text-2xl font-bold mb-4">5. CONTENT AND PRIVACY</h2>
           <ul className="list-disc pl-6 space-y-2">
-            <li>No user content is stored or saved</li>
-            <li>All content is deleted immediately upon release</li>
-            <li>We use server-side analytics as described in our Privacy Policy</li>
+            <li>We do not store, save, or record any content you write on our platform</li>
+            <li>All content is immediately and permanently deleted after you click "Release Thoughts"</li>
+            <li>We have no access to your written content at any time</li>
+            <li>We collect basic analytics data as described in our Privacy Policy</li>
             <li>You retain all rights to your content while using the platform</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">6. DISCLAIMERS</h2>
+          <h2 className="text-2xl font-bold mb-4">6. THIRD-PARTY SERVICES</h2>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>The Platform uses third-party services for analytics and functionality</li>
+            <li>By using UnburdenHQ, you agree to the terms of service and privacy policies of these third-party providers</li>
+            <li>We only use essential third-party services to maintain platform functionality</li>
+            <li>Third-party services may collect anonymous usage data as described in our Privacy Policy</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold mb-4">7. DISCLAIMERS</h2>
           
-          <h3 className="text-xl font-bold mt-6 mb-3">6.1 Service Provided "As Is"</h3>
+          <h3 className="text-xl font-bold mt-6 mb-3">7.1 Service Provided "As Is"</h3>
           <ul className="list-disc pl-6 space-y-2">
             <li>The platform is provided without warranties of any kind</li>
             <li>We do not guarantee uninterrupted or error-free service</li>
           </ul>
 
-          <h3 className="text-xl font-bold mt-6 mb-3">6.2 Mental Health Disclaimer</h3>
+          <h3 className="text-xl font-bold mt-6 mb-3">7.2 Mental Health Disclaimer</h3>
           <ul className="list-disc pl-6 space-y-2">
             <li>This is not a mental health service</li>
             <li>Seek professional help for mental health concerns</li>
@@ -74,36 +86,30 @@ const TermsAndConditions: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">7. LIMITATION OF LIABILITY</h2>
+          <h2 className="text-2xl font-bold mb-4">8. LIMITATION OF LIABILITY</h2>
           <p>We are not liable for:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Content you create</li>
             <li>Your use of the platform</li>
             <li>Any damages arising from platform use</li>
             <li>Technical issues or service interruptions</li>
+            <li>Third-party service functionality or availability</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">8. MODIFICATIONS</h2>
+          <h2 className="text-2xl font-bold mb-4">9. MODIFICATIONS</h2>
           <ul className="list-disc pl-6 space-y-2">
             <li>We reserve the right to modify these terms at any time</li>
+            <li>Changes will be effective immediately upon posting</li>
             <li>Continued use after changes constitutes acceptance</li>
-            <li>Check terms regularly for updates</li>
+            <li>It is your responsibility to review these terms periodically</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">9. GOVERNING LAW</h2>
+          <h2 className="text-2xl font-bold mb-4">10. GOVERNING LAW</h2>
           <p>Users must comply with their local laws when using the Platform.</p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold mb-4">10. THIRD-PARTY SERVICES</h2>
-          <p>
-            The Platform uses third-party services for analytics and functionality. By using UnburdenHQ, you agree 
-            to be bound by the terms of service and privacy policies of these third-party service providers.
-          </p>
         </section>
 
         <section>
@@ -119,8 +125,13 @@ const TermsAndConditions: React.FC = () => {
           <h2 className="text-2xl font-bold mb-4">12. ACKNOWLEDGMENT</h2>
           <p>
             By using UnburdenHQ, you acknowledge that you have read, understood, and agree to be bound by these 
-            Terms and Conditions and our Privacy Policy.
+            Terms and Conditions and our Privacy Policy. This includes consent to:
           </p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>The collection of basic analytics data as described in our Privacy Policy</li>
+            <li>The use of third-party services essential for platform functionality</li>
+            <li>All terms outlined in both this document and our Privacy Policy</li>
+          </ul>
         </section>
       </div>
 
