@@ -13,12 +13,29 @@ import { Link } from 'react-router-dom';
 
 const MAX_CHARACTERS = 5000;
 
-const DiagonalElement = ({ className = '' }: { className?: string }) => (
-  <div className={`diagonal-element bg-accent h-20 ${className}`} />
+// Decorative circle component
+const FloatingCircle = ({ size, delay = 0, className = '' }: { size: number; delay?: number; className?: string }) => (
+  <div 
+    className={`circle-decoration animate-float ${className}`}
+    style={{
+      width: size,
+      height: size,
+      animationDelay: `${delay}s`,
+      background: 'rgba(255, 255, 255, 0.5)'
+    }}
+  />
 );
 
-const CornerAccent = ({ className = '' }: { className?: string }) => (
-  <div className={`w-10 h-10 border-l-2 border-t-2 border-primary ${className}`} />
+// Circular background element
+const CircularDecoration = ({ size, opacity = 0.1, className = '' }: { size: number; opacity?: number; className?: string }) => (
+  <div 
+    className={`circle-decoration ${className}`}
+    style={{
+      width: size,
+      height: size,
+      border: `2px solid rgba(255, 255, 255, ${opacity})`
+    }}
+  />
 );
 
 const OnlineCheck: React.FC = () => {
@@ -44,7 +61,7 @@ const OnlineCheck: React.FC = () => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
-            <WifiOff className="text-primary" />
+            <WifiOff className="text-white" />
             Internet Connection Required
           </AlertDialogTitle>
           <AlertDialogDescription>
@@ -67,19 +84,19 @@ const TermsAndConditions: React.FC<{
     <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
       <AlertDialogHeader>
         <AlertDialogTitle className="flex items-center gap-2">
-          <Shield className="text-primary" />
+          <Shield className="text-white" />
           Terms & Conditions
         </AlertDialogTitle>
         <AlertDialogDescription>
           <div className="space-y-4 text-left">
-            <p className="text-sm">
+            <p className="text-white/80">
               By using UnburdenHQ, you confirm:
             </p>
-            <ul className="list-disc list-inside space-y-2">
+            <ul className="list-disc list-inside space-y-2 text-white/80">
               <li>You are at least 18 years old</li>
               <li>You must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years</li>
               <li>This is not a substitute for professional mental health services</li>
-              <li>You accept our <Link to="/terms" className="text-primary hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link></li>
+              <li>You accept our <Link to="/terms" className="text-white hover:text-white/80">Terms & Conditions</Link> and <Link to="/privacy" className="text-white hover:text-white/80">Privacy Policy</Link></li>
             </ul>
           </div>
         </AlertDialogDescription>
@@ -87,7 +104,7 @@ const TermsAndConditions: React.FC<{
       <AlertDialogFooter>
         <AlertDialogAction 
           onClick={onAccept}
-          className="brutalist-button text-white hover:border-primary"
+          className="modern-button"
         >
           <Check className="mr-2" /> I Accept
         </AlertDialogAction>
@@ -98,7 +115,7 @@ const TermsAndConditions: React.FC<{
 
 const SuccessMessage: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-    <div className="bg-bg-dark text-primary px-8 py-4 rounded animate-poof text-xl font-bold">
+    <div className="glass-panel px-8 py-4 rounded-lg animate-poof text-xl font-semibold neon-text">
       Poof... gone
     </div>
   </div>
@@ -154,55 +171,59 @@ const Unburden: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen grid-pattern">
-      <DiagonalElement className="absolute top-0 left-0" />
-      <DiagonalElement className="absolute top-0 right-0 transform -scale-x-100" />
+    <div className="min-h-screen grid-pattern relative overflow-hidden">
+      {/* Decorative Elements */}
+      <CircularDecoration size={500} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+      <CircularDecoration size={400} opacity={0.15} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+      <CircularDecoration size={300} opacity={0.2} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+      
+      {/* Floating Circles */}
+      <FloatingCircle size={10} className="absolute top-[20%] right-[30%]" />
+      <FloatingCircle size={6} delay={1} className="absolute top-[40%] left-[20%]" />
+      <FloatingCircle size={8} delay={2} className="absolute top-[60%] right-[20%]" />
+      <FloatingCircle size={4} delay={3} className="absolute top-[30%] left-[30%]" />
 
       <div className="container mx-auto p-4 relative z-10">
-        <div className="mb-16 mt-8">
-          <h1 className="text-[120px] font-black text-white leading-none tracking-tight mb-4">
-            UN<br />BURDEN
-          </h1>
-          <div className="h-1 w-40 bg-primary animate-line" />
-        </div>
+        {/* Title Section */}
+        <h1 className="text-6xl md:text-7xl font-black text-center mt-12 mb-8 neon-text">
+          UNBURDEN
+        </h1>
+        
+        {/* Main Content Area */}
+        <div className="max-w-3xl mx-auto mt-16">
+          <div className="relative">
+            <textarea
+              ref={textareaRef}
+              value={thought}
+              onChange={(e) => {
+                setThought(e.target.value);
+                setCharacterCount(e.target.value.length);
+              }}
+              className={`w-full p-6 modern-textarea rounded-lg min-h-[300px]
+                ${isAnimating ? 'animate-fade-away' : ''}`}
+              placeholder="Release your thoughts here..."
+              maxLength={MAX_CHARACTERS}
+              disabled={isAnimating}
+            />
+            
+            <div className="absolute bottom-4 right-4 text-white/60 text-sm">
+              {characterCount}/{MAX_CHARACTERS}
+            </div>
+          </div>
 
-        <div className="relative max-w-3xl mx-auto">
-          <CornerAccent className="absolute -top-2 -left-2 animate-corner" />
-          <CornerAccent className="absolute -top-2 -right-2 transform scale-x-[-1] animate-corner" />
-          <CornerAccent className="absolute -bottom-2 -left-2 transform scale-y-[-1] animate-corner" />
-          <CornerAccent className="absolute -bottom-2 -right-2 transform scale-[-1] animate-corner" />
-
-          <textarea
-            ref={textareaRef}
-            value={thought}
-            onChange={(e) => {
-              setThought(e.target.value);
-              setCharacterCount(e.target.value.length);
-            }}
-            className={`w-full p-6 brutalist-textarea text-white min-h-[200px]
-              ${isAnimating ? 'animate-fade-away' : ''}`}
-            placeholder="Pour your heart out..."
-            maxLength={MAX_CHARACTERS}
-            disabled={isAnimating}
-          />
-          
-          <div className="absolute bottom-4 right-4 text-text-light text-sm">
-            {characterCount}/{MAX_CHARACTERS}
+          <div className="text-center mt-12">
+            <button
+              onClick={handleRelease}
+              disabled={!thought || isAnimating}
+              className={`modern-button px-12 py-4 rounded-lg font-bold text-xl
+                ${!thought || isAnimating ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'}`}
+            >
+              Release Thoughts
+            </button>
           </div>
         </div>
 
-        <div className="text-center mt-12">
-          <button
-            onClick={handleRelease}
-            disabled={!thought || isAnimating}
-            className={`brutalist-button px-12 py-4 text-white font-bold text-xl
-              ${thought && !isAnimating ? 'hover:border-primary' : 'opacity-50 cursor-not-allowed'}`}
-          >
-            Release Thoughts
-          </button>
-        </div>
-
-        <footer className="footer-links">
+        <footer className="footer-links mt-auto">
           <Link to="/about" className="footer-link">About UnburdenHQ</Link>
           <Link to="/privacy" className="footer-link">Privacy Policy</Link>
           <Link to="/terms" className="footer-link">Terms & Conditions</Link>

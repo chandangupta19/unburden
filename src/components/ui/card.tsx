@@ -7,12 +7,11 @@ interface CardProps {
 
 export const Card: React.FC<CardProps> = ({ children, className = '' }) => {
   return (
-    <div className={`bg-bg-darker rounded border border-accent relative ${className}`}>
-      {children}
-      <div className="absolute left-0 top-0 w-4 h-[2px] bg-primary" />
-      <div className="absolute right-0 top-0 w-4 h-[2px] bg-primary" />
-      <div className="absolute left-0 bottom-0 w-4 h-[2px] bg-primary" />
-      <div className="absolute right-0 bottom-0 w-4 h-[2px] bg-primary" />
+    <div className={`glass-panel rounded-lg p-6 relative overflow-hidden ${className}`}>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FF3CAC] via-[#784BA0] to-[#2B86C5] opacity-50" />
+      <div className="relative z-10">
+        {children}
+      </div>
     </div>
   );
 };

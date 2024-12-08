@@ -19,8 +19,8 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-      <div className="bg-bg-darker text-white rounded max-w-md w-full border border-accent modal-brutalist">
+    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/50">
+      <div className="glass-panel max-w-md w-full rounded-lg shadow-2xl">
         {children}
       </div>
     </div>
@@ -32,15 +32,15 @@ export const AlertDialogContent: React.FC<BaseProps> = ({ children, className = 
 );
 
 export const AlertDialogHeader: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`mb-4 modal-brutalist-header ${className}`}>{children}</div>
+  <div className={`mb-4 ${className}`}>{children}</div>
 );
 
 export const AlertDialogTitle: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <h2 className={`text-xl font-bold text-white mb-2 ${className}`}>{children}</h2>
+  <h2 className={`text-xl font-bold text-white mb-2 neon-text ${className}`}>{children}</h2>
 );
 
 export const AlertDialogDescription: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`text-sm text-text-light ${className}`}>{children}</div>
+  <div className={`text-sm text-white/70 ${className}`}>{children}</div>
 );
 
 export const AlertDialogFooter: React.FC<BaseProps> = ({ children, className = '' }) => (
@@ -53,7 +53,7 @@ export const AlertDialogAction: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
   ...props 
 }) => (
   <button 
-    className={`brutalist-button px-4 py-2 text-white ${className}`}
+    className={`modern-button px-4 py-2 rounded-lg ${className}`}
     {...props}
   >
     {children}
@@ -66,7 +66,7 @@ export const AlertDialogCancel: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
   ...props 
 }) => (
   <button 
-    className={`px-4 py-2 text-text-light hover:text-white transition-colors ${className}`}
+    className={`px-4 py-2 text-white/70 hover:text-white transition-colors ${className}`}
     {...props}
   >
     {children}
