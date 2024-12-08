@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card } from './components/ui/card';
-import { Shield, Check, Lock, Cloud, Heart, WifiOff } from 'lucide-react';
+import { Shield, Check, WifiOff } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogContent,
