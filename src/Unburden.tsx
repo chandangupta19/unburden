@@ -9,11 +9,23 @@ import {
   AlertDialogTitle,
   AlertDialogFooter,
   AlertDialogAction,
-} from './components/ui/alert-dialog';
+} from '@/components/ui/alert-dialog';
 import { Link } from 'react-router-dom';
 
 const MAX_CHARACTERS = 5000;
 const MIN_SLIDE_THRESHOLD = 90;
+
+const ThoughtBubble: React.FC<{ style: React.CSSProperties }> = ({ style }) => (
+  <div className="thought-bubble animate-float" style={style} />
+);
+
+const SuccessMessage: React.FC = () => (
+  <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+    <div className="bg-white/90 text-blue-600 px-8 py-4 rounded-lg animate-poof text-xl font-semibold">
+      Thoughts released...
+    </div>
+  </div>
+);
 
 const OnlineCheck: React.FC = () => {
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
@@ -52,18 +64,6 @@ const OnlineCheck: React.FC = () => {
     </AlertDialog>
   );
 };
-
-const ThoughtBubble: React.FC<{ style: React.CSSProperties }> = ({ style }) => (
-  <div className="thought-bubble animate-float" style={style} />
-);
-
-const SuccessMessage: React.FC = () => (
-  <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-    <div className="bg-white/90 text-blue-600 px-8 py-4 rounded-lg animate-poof text-xl font-semibold">
-      Thoughts released...
-    </div>
-  </div>
-);
 
 const TermsAndConditions: React.FC<{
   isOpen: boolean;
@@ -185,7 +185,7 @@ const Unburden: React.FC = () => {
               setCharacterCount(e.target.value.length);
             }}
             className={'w-full p-6 thought-input rounded-lg text-white min-h-[200px] resize-none ' + 
-  (isAnimating ? 'animate-fade-away' : '')}
+              (isAnimating ? 'animate-fade-away' : '')}
             placeholder="Pour your heart out..."
             maxLength={MAX_CHARACTERS}
             disabled={isAnimating}

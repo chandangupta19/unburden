@@ -1,6 +1,7 @@
+```typescript
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Unburden from './Unburden';
+import Unburden from './components/Unburden';
 import AboutUnburden from './pages/AboutUnburden';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
@@ -19,3 +20,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+```
