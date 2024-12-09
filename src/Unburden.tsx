@@ -13,7 +13,7 @@ import {
 import { Link } from 'react-router-dom';
 
 const MAX_CHARACTERS = 5000;
-const MIN_SLIDE_THRESHOLD = 90; // Percentage threshold for release
+const MIN_SLIDE_THRESHOLD = 90;
 
 const OnlineCheck: React.FC = () => {
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
@@ -53,7 +53,7 @@ const OnlineCheck: React.FC = () => {
   );
 };
 
-const ThoughtBubble = ({ style }: { style: React.CSSProperties }) => (
+const ThoughtBubble: React.FC<{ style: React.CSSProperties }> = ({ style }) => (
   <div className="thought-bubble animate-float" style={style} />
 );
 
@@ -113,14 +113,6 @@ const Unburden: React.FC = () => {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [thoughtBubbles, setThoughtBubbles] = useState<React.CSSProperties[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  
-  // Ensure no data persists
-  useEffect(() => {
-    return () => {
-      setThought('');
-      setCharacterCount(0);
-    };
-  }, []);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -138,12 +130,12 @@ const Unburden: React.FC = () => {
     const bubbles: React.CSSProperties[] = [];
     for (let i = 0; i < 8; i++) {
       bubbles.push({
-        width: `${Math.random() * 15 + 5}px`,
-        height: `${Math.random() * 15 + 5}px`,
-        left: `${Math.random() * 80 + 10}%`,
+        width: (Math.random() * 15 + 5) + 'px',
+        height: (Math.random() * 15 + 5) + 'px',
+        left: (Math.random() * 80 + 10) + '%',
         top: '100%',
         opacity: Math.random() * 0.5 + 0.5,
-        animationDelay: `${Math.random() * 0.5}s`,
+        animationDelay: Math.random() * 0.5 + 's'
       });
     }
     setThoughtBubbles(bubbles);
@@ -159,7 +151,7 @@ const Unburden: React.FC = () => {
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
-        setThought(''); // Immediately clear the thought
+        setThought('');
         setCharacterCount(0);
         setIsAnimating(false);
         setSliderValue(0);
@@ -212,7 +204,7 @@ const Unburden: React.FC = () => {
           <div className="relative">
             <div 
               className="slider-progress absolute left-0 top-0" 
-              style={{ width: `${sliderValue}%` }}
+              style={{ width: sliderValue + '%' }}
             />
             <input
               type="range"
