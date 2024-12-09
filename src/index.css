@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --gradient-start: #FF3CAC;
+  --gradient-middle: #784BA0;
+  --gradient-end: #2B86C5;
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --overlay-light: rgba(255, 255, 255, 0.1);
+  --overlay-medium: rgba(255, 255, 255, 0.2);
+  --overlay-dark: rgba(0, 0, 0, 0.3);
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -9,62 +20,26 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f4f4f4;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
+  color: var(--text-primary);
+  min-height: 100vh;
 }
 
-/* Textarea Enhancement */
-.thought-input {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+/* Grid Pattern */
+.grid-pattern {
+  background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-/* Release Slider */
-.release-slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 50px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 25px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.release-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 44px;
-  height: 44px;
-  background: white;
+/* Circular Elements */
+.circle-decoration {
+  position: absolute;
   border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
 }
 
-.release-slider::-moz-range-thumb {
-  width: 44px;
-  height: 44px;
-  background: white;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  border: none;
-}
-
-/* Thought Bubble Animations */
-@keyframes floatUp {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100px) scale(0);
-    opacity: 0;
-  }
-}
-
+/* Enhanced fade animation */
 @keyframes fadeAway {
   0% {
     transform: translateY(0) rotate(0);
@@ -76,58 +51,79 @@ body {
   }
 }
 
-.thought-bubble {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.animate-float {
-  animation: floatUp 1.5s ease-out forwards;
-}
-
-.animate-fade-away {
-  animation: fadeAway 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
 /* Success message animation */
 @keyframes poofMessage {
   0% {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.8) translateY(20px);
   }
   50% {
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(1.1) translateY(0);
   }
   100% {
     opacity: 0;
-    transform: scale(1);
+    transform: scale(1) translateY(-20px);
   }
+}
+
+/* Floating animation for decorative elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-away {
+  animation: fadeAway 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .animate-poof {
   animation: poofMessage 1.5s ease-out forwards;
 }
 
-/* Progress Bar for Slider */
-.slider-progress {
-  height: 50px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 25px;
-  transition: width 0.3s ease;
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
-/* Hide scrollbar but maintain functionality */
-textarea {
-  overflow: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+/* Modern Glassmorphism */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 }
 
-textarea::-webkit-scrollbar {
-  display: none;
+/* Custom Textarea Styles */
+.modern-textarea {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  transition: all 0.3s ease;
+  transform: perspective(1000px) rotateX(2deg);
+}
+
+.modern-textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: perspective(1000px) rotateX(0);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Modern Button Styles */
+.modern-button {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--gradient-end);
+  transform: perspective(1000px) rotateX(2deg);
+  transition: all 0.3s ease;
+}
+
+.modern-button:hover {
+  transform: perspective(1000px) rotateX(0) translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
 /* Footer styles */
@@ -137,18 +133,25 @@ textarea::-webkit-scrollbar {
   gap: 1.5rem;
   margin-top: 2rem;
   padding: 1rem 0;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-link {
-  color: #64748b;
-  text-decoration: underline;
-  font-size: 0.875rem;
-  transition: color 0.2s ease;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .footer-link:hover {
-  color: #3b82f6;
+  color: var(--text-primary);
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* Neon Text Effect */
+.neon-text {
+  text-shadow: 0 0 10px rgba(255,255,255,0.5),
+               0 0 20px rgba(255,255,255,0.3),
+               0 0 30px rgba(255,255,255,0.2);
 }
 
 /* Mobile Optimizations */
@@ -158,4 +161,18 @@ textarea::-webkit-scrollbar {
     align-items: center;
     gap: 1rem;
   }
+  
+  .grid-pattern {
+    background-size: 20px 20px;
+  }
+}
+
+/* Hide scrollbar but maintain functionality */
+textarea {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+textarea::-webkit-scrollbar {
+  display: none;
 }
