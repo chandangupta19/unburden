@@ -1,3 +1,4 @@
+```typescript
 import React, { useState, useEffect, useRef } from 'react';
 import { Shield, Check, WifiOff } from 'lucide-react';
 import {
@@ -14,30 +15,8 @@ import { Link } from 'react-router-dom';
 const MAX_CHARACTERS = 5000;
 const MIN_SLIDE_THRESHOLD = 90; // Percentage threshold for release
 
-// Thought bubble component
-const ThoughtBubble = ({ style }: { style: React.CSSProperties }) => (
-  <div className="thought-bubble animate-float" style={style} />
-);
-
-const SuccessMessage: React.FC = () => (
-  <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-    <div className="bg-white/90 text-blue-600 px-8 py-4 rounded-lg animate-poof text-xl font-semibold">
-      Poof... gone
-    </div>
-  </div>
-);
-
-const Unburden: React.FC = () => {
-  const [thought, setThought] = useState<string>('');
-  const [characterCount, setCharacterCount] = useState<number>(0);
-  const [showTerms, setShowTerms] = useState<boolean>(true);
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+const OnlineCheck: React.FC = () => {
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
-  const [sliderValue, setSliderValue] = useState<number>(0);
-  const [thoughtBubbles, setThoughtBubbles] = useState<React.CSSProperties[]>([]);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const releaseTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -52,20 +31,103 @@ const Unburden: React.FC = () => {
     };
   }, []);
 
+  if (isOnline) return null;
+
+  return (
+    <AlertDialog open={true}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
+            <WifiOff className="text-white" />
+            Internet Connection Required
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            <p className="mb-4">
+              First-time access to UnburdenHQ requires an internet connection to verify and accept the latest terms and conditions.
+            </p>
+            <p>Please connect to the internet and refresh the page.</p>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+const ThoughtBubble = ({ style }: { style: React.CSSProperties }) => (
+  <div className="thought-bubble animate-float" style={style} />
+);
+
+const SuccessMessage: React.FC = () => (
+  <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+    <div className="bg-white/90 text-blue-600 px-8 py-4 rounded-lg animate-poof text-xl font-semibold">
+      Thoughts released...
+    </div>
+  </div>
+);
+
+const TermsAndConditions: React.FC<{
+  isOpen: boolean;
+  onAccept: () => void;
+}> = ({ isOpen, onAccept }) => (
+  <AlertDialog open={isOpen}>
+    <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
+      <AlertDialogHeader>
+        <AlertDialogTitle className="flex items-center gap-2">
+          <Shield className="text-blue-500" />
+          Terms & Conditions
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+          <div className="space-y-4 text-left">
+            <p className="text-sm">
+              By using UnburdenHQ, you confirm:
+            </p>
+            <ul className="list-disc list-inside space-y-2">
+              <li>You are at least 18 years old</li>
+              <li>You must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years</li>
+              <li>This is not a substitute for professional mental health services</li>
+              <li>All your content is private and will be immediately deleted upon release</li>
+              <li>You accept our <Link to="/terms" className="text-blue-500 underline hover:text-blue-600">Terms & Conditions</Link> and <Link to="/privacy" className="text-blue-500 underline hover:text-blue-600">Privacy Policy</Link></li>
+            </ul>
+          </div>
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogAction 
+          onClick={onAccept}
+          className="bg-blue-500 hover:bg-blue-600 text-white"
+        >
+          <Check className="mr-2" /> I Accept
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+);
+
+const Unburden: React.FC = () => {
+  const [thought, setThought] = useState<string>('');
+  const [characterCount, setCharacterCount] = useState<number>(0);
+  const [showTerms, setShowTerms] = useState<boolean>(true);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  const [sliderValue, setSliderValue] = useState<number>(0);
+  const [thoughtBubbles, setThoughtBubbles] = useState<React.CSSProperties[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  // Ensure no data persists
+  useEffect(() => {
+    return () => {
+      setThought('');
+      setCharacterCount(0);
+    };
+  }, []);
+
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${Math.max(200, textareaRef.current.scrollHeight)}px`;
     }
   }, [thought]);
-
-  useEffect(() => {
-    return () => {
-      if (releaseTimeoutRef.current) {
-        clearTimeout(releaseTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const handleTermsAccept = () => {
     if (!isOnline) return;
@@ -93,11 +155,11 @@ const Unburden: React.FC = () => {
     setIsAnimating(true);
     createThoughtBubbles();
     
-    releaseTimeoutRef.current = setTimeout(() => {
+    setTimeout(() => {
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
-        setThought('');
+        setThought(''); // Immediately clear the thought
         setCharacterCount(0);
         setIsAnimating(false);
         setSliderValue(0);
@@ -174,47 +236,12 @@ const Unburden: React.FC = () => {
         </footer>
       </div>
 
+      <OnlineCheck />
       <TermsAndConditions isOpen={showTerms} onAccept={handleTermsAccept} />
       {showSuccess && <SuccessMessage />}
     </div>
   );
 };
 
-const TermsAndConditions: React.FC<{
-  isOpen: boolean;
-  onAccept: () => void;
-}> = ({ isOpen, onAccept }) => (
-  <AlertDialog open={isOpen}>
-    <AlertDialogContent className="max-h-[90vh] overflow-y-auto">
-      <AlertDialogHeader>
-        <AlertDialogTitle className="flex items-center gap-2">
-          <Shield className="text-blue-500" />
-          Terms & Conditions
-        </AlertDialogTitle>
-        <AlertDialogDescription>
-          <div className="space-y-4 text-left">
-            <p className="text-sm">
-              By using UnburdenHQ, you confirm:
-            </p>
-            <ul className="list-disc list-inside space-y-2">
-              <li>You are at least 18 years old</li>
-              <li>You must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years</li>
-              <li>This is not a substitute for professional mental health services</li>
-              <li>You accept our <Link to="/terms" className="text-blue-500 underline hover:text-blue-600">Terms & Conditions</Link> and <Link to="/privacy" className="text-blue-500 underline hover:text-blue-600">Privacy Policy</Link></li>
-            </ul>
-          </div>
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogAction 
-          onClick={onAccept}
-          className="bg-blue-500 hover:bg-blue-600 text-white"
-        >
-          <Check className="mr-2" /> I Accept
-        </AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
-);
-
 export default Unburden;
+```
