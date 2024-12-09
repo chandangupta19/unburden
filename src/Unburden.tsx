@@ -125,7 +125,7 @@ const Unburden: React.FC = () => {
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${Math.max(200, textareaRef.current.scrollHeight)}px`;
+      textareaRef.current.style.height = Math.max(200, textareaRef.current.scrollHeight) + 'px';
     }
   }, [thought]);
 
