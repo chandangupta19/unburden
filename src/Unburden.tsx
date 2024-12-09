@@ -184,8 +184,8 @@ const Unburden: React.FC = () => {
               setThought(e.target.value);
               setCharacterCount(e.target.value.length);
             }}
-            className={`w-full p-6 thought-input rounded-lg text-white min-h-[200px] resize-none
-              ${isAnimating ? 'animate-fade-away' : ''}`}
+            className={'w-full p-6 thought-input rounded-lg text-white min-h-[200px] resize-none ' + 
+  (isAnimating ? 'animate-fade-away' : '')}
             placeholder="Pour your heart out..."
             maxLength={MAX_CHARACTERS}
             disabled={isAnimating}
