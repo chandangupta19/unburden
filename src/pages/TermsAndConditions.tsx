@@ -1,16 +1,19 @@
+```typescript
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="glass-panel rounded-lg p-6 mb-8">
-    <h2 className="text-2xl font-bold mb-4 text-white">{title}</h2>
+    <h2 className="text-2xl font-semibold text-white mb-4">{title}</h2>
     {children}
   </section>
 );
 
 const TermsAndConditions: React.FC = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   return (
@@ -75,13 +78,13 @@ const TermsAndConditions: React.FC = () => {
           </Section>
 
           <Section title="7. DISCLAIMERS">
-            <h3 className="text-xl font-bold mt-6 mb-3 text-white">7.1 Service Provided "As Is"</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">7.1 Service Provided "As Is"</h3>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
               <li>The platform is provided without warranties of any kind</li>
               <li>We do not guarantee uninterrupted or error-free service</li>
             </ul>
 
-            <h3 className="text-xl font-bold mt-6 mb-3 text-white">7.2 Mental Health Disclaimer</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">7.2 Mental Health Disclaimer</h3>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
               <li>This is not a mental health service</li>
               <li>Seek professional help for mental health concerns</li>
@@ -135,9 +138,9 @@ const TermsAndConditions: React.FC = () => {
         </div>
 
         <footer className="footer-links">
-          <Link to="/" className="footer-link">Home</Link>
-          <Link to="/about" className="footer-link">About UnburdenHQ</Link>
-          <Link to="/privacy" className="footer-link">Privacy Policy</Link>
+          <button onClick={() => navigate('/')} className="footer-link">Home</button>
+          <button onClick={() => navigate('/about')} className="footer-link">About UnburdenHQ</button>
+          <button onClick={() => navigate('/privacy')} className="footer-link">Privacy Policy</button>
         </footer>
       </div>
     </div>
@@ -145,3 +148,4 @@ const TermsAndConditions: React.FC = () => {
 };
 
 export default TermsAndConditions;
+```

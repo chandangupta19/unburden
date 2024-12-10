@@ -1,16 +1,19 @@
+```typescript
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="glass-panel rounded-lg p-6 mb-8">
-    <h2 className="text-2xl font-bold mb-4 text-white">{title}</h2>
+    <h2 className="text-2xl font-semibold text-white mb-4">{title}</h2>
     {children}
   </section>
 );
 
 const PrivacyPolicy: React.FC = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   return (
@@ -30,21 +33,21 @@ const PrivacyPolicy: React.FC = () => {
           </Section>
 
           <Section title="2. INFORMATION COLLECTION AND USE">
-            <h3 className="text-xl font-bold mt-6 mb-3 text-white">2.1 User Content</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">2.1 User Content</h3>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
               <li>We do not store, save, or record any content you write on our platform</li>
               <li>All content is immediately and permanently deleted after you click "Release Thoughts"</li>
               <li>We have no access to your written content at any time</li>
             </ul>
 
-            <h3 className="text-xl font-bold mt-6 mb-3 text-white">2.2 Site Analytics</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">2.2 Site Analytics</h3>
             <p className="text-white/80">
               We use basic analytics to understand general site usage. This includes standard, anonymous usage data 
               that helps us improve the platform.
             </p>
 
             <div className="bg-white/5 p-6 rounded-lg my-4 border border-white/10">
-              <p className="font-bold mb-2 text-white">What is NOT collected:</p>
+              <p className="font-semibold mb-2 text-white">What is NOT collected:</p>
               <ul className="list-disc pl-6 space-y-2 text-white/80">
                 <li>Your written content</li>
                 <li>Personal identification</li>
@@ -97,9 +100,9 @@ const PrivacyPolicy: React.FC = () => {
         </div>
 
         <footer className="footer-links">
-          <Link to="/" className="footer-link">Home</Link>
-          <Link to="/about" className="footer-link">About UnburdenHQ</Link>
-          <Link to="/terms" className="footer-link">Terms & Conditions</Link>
+          <button onClick={() => navigate('/')} className="footer-link">Home</button>
+          <button onClick={() => navigate('/about')} className="footer-link">About UnburdenHQ</button>
+          <button onClick={() => navigate('/terms')} className="footer-link">Terms & Conditions</button>
         </footer>
       </div>
     </div>
@@ -107,3 +110,4 @@ const PrivacyPolicy: React.FC = () => {
 };
 
 export default PrivacyPolicy;
+```

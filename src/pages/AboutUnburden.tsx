@@ -1,10 +1,13 @@
+```typescript
 import React, { useEffect } from 'react';
 import { Lock, Cloud, Heart } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AboutUnburden: React.FC = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   return (
@@ -28,7 +31,7 @@ const AboutUnburden: React.FC = () => {
         </div>
 
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold mb-6 text-white">Key Features:</h2>
+          <h2 className="text-2xl font-semibold text-white mb-6">Key Features:</h2>
           <div className="grid gap-6">
             <div className="glass-panel rounded-lg p-6">
               <div className="flex items-start gap-4">
@@ -36,7 +39,7 @@ const AboutUnburden: React.FC = () => {
                   <Lock className="text-white" size={24} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2 text-white">Secure & Private</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-white">Secure & Private</h3>
                   <p className="text-white/70">Your thoughts remain completely private with no data storage.</p>
                 </div>
               </div>
@@ -48,7 +51,7 @@ const AboutUnburden: React.FC = () => {
                   <Cloud className="text-white" size={24} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2 text-white">Feel Lighter</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-white">Feel Lighter</h3>
                   <p className="text-white/70">Your words vanish instantly after release, leaving no digital footprint.</p>
                 </div>
               </div>
@@ -60,7 +63,7 @@ const AboutUnburden: React.FC = () => {
                   <Heart className="text-white" size={24} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2 text-white">Express Yourself</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-white">Express Yourself</h3>
                   <p className="text-white/70">A simple way to express and let go of overwhelming thoughts.</p>
                 </div>
               </div>
@@ -80,9 +83,9 @@ const AboutUnburden: React.FC = () => {
         </div>
 
         <footer className="footer-links">
-          <Link to="/" className="footer-link">Home</Link>
-          <Link to="/privacy" className="footer-link">Privacy Policy</Link>
-          <Link to="/terms" className="footer-link">Terms & Conditions</Link>
+          <button onClick={() => navigate('/')} className="footer-link">Home</button>
+          <button onClick={() => navigate('/privacy')} className="footer-link">Privacy Policy</button>
+          <button onClick={() => navigate('/terms')} className="footer-link">Terms & Conditions</button>
         </footer>
       </div>
     </div>
@@ -90,3 +93,4 @@ const AboutUnburden: React.FC = () => {
 };
 
 export default AboutUnburden;
+```

@@ -1,3 +1,4 @@
+```typescript
 import React from 'react';
 
 interface AlertDialogProps {
@@ -36,7 +37,7 @@ export const AlertDialogHeader: React.FC<BaseProps> = ({ children, className = '
 );
 
 export const AlertDialogTitle: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <h2 className={`text-xl font-bold text-white mb-2 neon-text ${className}`}>{children}</h2>
+  <h2 className={`text-xl font-bold text-white mb-2 ${className}`}>{children}</h2>
 );
 
 export const AlertDialogDescription: React.FC<BaseProps> = ({ children, className = '' }) => (
@@ -53,7 +54,7 @@ export const AlertDialogAction: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
   ...props 
 }) => (
   <button 
-    className={`modern-button px-4 py-2 rounded-lg ${className}`}
+    className={`px-4 py-2 bg-white/90 text-blue-600 rounded-lg hover:bg-white transition-colors ${className}`}
     {...props}
   >
     {children}
@@ -74,3 +75,4 @@ export const AlertDialogCancel: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
 );
 
 export default AlertDialog;
+```
