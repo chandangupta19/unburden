@@ -1,4 +1,3 @@
-```typescript
 import React from 'react';
 
 interface AlertDialogProps {
@@ -29,23 +28,23 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
 };
 
 export const AlertDialogContent: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`p-6 ${className}`}>{children}</div>
+  <div className={'p-6 ' + className}>{children}</div>
 );
 
 export const AlertDialogHeader: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`mb-4 ${className}`}>{children}</div>
+  <div className={'mb-4 ' + className}>{children}</div>
 );
 
 export const AlertDialogTitle: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <h2 className={`text-xl font-bold text-white mb-2 ${className}`}>{children}</h2>
+  <h2 className={'text-xl font-bold text-white mb-2 ' + className}>{children}</h2>
 );
 
 export const AlertDialogDescription: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`text-sm text-white/70 ${className}`}>{children}</div>
+  <div className={'text-sm text-white/70 ' + className}>{children}</div>
 );
 
 export const AlertDialogFooter: React.FC<BaseProps> = ({ children, className = '' }) => (
-  <div className={`flex justify-end space-x-2 mt-6 ${className}`}>{children}</div>
+  <div className={'flex justify-end space-x-2 mt-6 ' + className}>{children}</div>
 );
 
 export const AlertDialogAction: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ 
@@ -54,7 +53,7 @@ export const AlertDialogAction: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
   ...props 
 }) => (
   <button 
-    className={`px-4 py-2 bg-white/90 text-blue-600 rounded-lg hover:bg-white transition-colors ${className}`}
+    className={'bg-white/90 text-blue-600 px-4 py-2 rounded-lg hover:bg-white transition-colors ' + className}
     {...props}
   >
     {children}
@@ -67,7 +66,7 @@ export const AlertDialogCancel: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
   ...props 
 }) => (
   <button 
-    className={`px-4 py-2 text-white/70 hover:text-white transition-colors ${className}`}
+    className={'px-4 py-2 text-white/70 hover:text-white transition-colors ' + className}
     {...props}
   >
     {children}
@@ -75,4 +74,3 @@ export const AlertDialogCancel: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
 );
 
 export default AlertDialog;
-```

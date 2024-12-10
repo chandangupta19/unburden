@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Unburden from './Unburden';
 import AboutUnburden from './pages/AboutUnburden';
@@ -6,7 +6,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 
 const ScrollToTop: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 

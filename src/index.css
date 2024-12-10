@@ -48,7 +48,7 @@ body {
   100% { transform: translate(0, 0) scale(1); }
 }
 
-.bird {
+.bird-idle {
   animation: birdIdle 2s ease-in-out infinite;
 }
 
@@ -124,14 +124,44 @@ body {
   transition: width 0.3s ease;
 }
 
+@keyframes fadeAway {
+  0% { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% { 
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+}
+
 @keyframes poofMessage {
-  0% { opacity: 0; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.1); }
-  100% { opacity: 0; transform: scale(1); }
+  0% { 
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% { 
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-away {
+  animation: fadeAway 0.8s ease-out forwards;
 }
 
 .animate-poof {
   animation: poofMessage 1.5s ease-out forwards;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .footer-links {

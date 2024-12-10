@@ -15,10 +15,16 @@ import { Link, useNavigate } from 'react-router-dom';
 const MAX_CHARACTERS = 5000;
 const MIN_SLIDE_THRESHOLD = 90;
 
+interface ParticleStyles extends React.CSSProperties {
+  '--tx'?: string;
+  '--ty'?: string;
+  '--duration'?: string;
+}
+
 const Bird: React.FC<{ className?: string }> = ({ className = '' }) => (
   <svg 
     viewBox="0 0 24 24" 
-    className={`w-8 h-8 ${className}`}
+    className={'w-8 h-8 ' + className}
     fill="none" 
     stroke="currentColor" 
     strokeWidth="1.5"
@@ -32,26 +38,26 @@ const Bird: React.FC<{ className?: string }> = ({ className = '' }) => (
 );
 
 const Particle: React.FC<{ 
-  style: React.CSSProperties;
+  style: ParticleStyles;
   position: { x: number; y: number };
 }> = ({ style, position }) => (
   <div
     className="particle"
     style={{
       ...style,
-      left: position.x,
-      top: position.y,
+      left: position.x + 'px',
+      top: position.y + 'px',
       '--tx': Math.random() * 200 - 100 + 'px',
       '--ty': -Math.random() * 200 - 100 + 'px',
-      '--duration': 0.8 + Math.random() * 0.5 + 's',
+      '--duration': 0.8 + Math.random() * 0.5 + 's'
     } as React.CSSProperties}
   />
 );
 
 const SuccessMessage: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-    <div className="glass-panel px-8 py-4 rounded-lg animate-poof text-xl font-semibold neon-text">
-      Thoughts Released...
+    <div className="glass-panel px-8 py-4 rounded-lg animate-poof text-xl font-semibold">
+      Set free...
     </div>
   </div>
 );
@@ -70,8 +76,8 @@ const NavigationWarning: React.FC<{
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogAction onClick={onCancel} className="glass-panel">Stay</AlertDialogAction>
-        <AlertDialogAction onClick={onConfirm} className="glass-panel">Leave Page</AlertDialogAction>
+        <AlertDialogAction onClick={onCancel}>Stay</AlertDialogAction>
+        <AlertDialogAction onClick={onConfirm}>Leave Page</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
@@ -90,7 +96,7 @@ const Terms: React.FC<{
         </AlertDialogTitle>
         <AlertDialogDescription>
           <div className="space-y-4 text-left">
-            <p className="text-white/80">
+            <p className="text-sm text-white/80">
               By using UnburdenHQ, you confirm:
             </p>
             <ul className="list-disc list-inside space-y-2 text-white/80">
@@ -104,10 +110,7 @@ const Terms: React.FC<{
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogAction 
-          onClick={onAccept}
-          className="glass-panel px-4 py-2 text-white hover:bg-white/20"
-        >
+        <AlertDialogAction onClick={onAccept}>
           <Check className="mr-2" /> I Accept
         </AlertDialogAction>
       </AlertDialogFooter>
@@ -116,16 +119,16 @@ const Terms: React.FC<{
 );
 
 const Unburden: React.FC = () => {
-  const [thought, setThought] = useState<string>('');
-  const [characterCount, setCharacterCount] = useState<number>(0);
-  const [showTerms, setShowTerms] = useState<boolean>(true);
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const [showSuccess, setShowSuccess] = useState<boolean>(false);
-  const [sliderValue, setSliderValue] = useState<number>(0);
-  const [showWarning, setShowWarning] = useState<boolean>(false);
+  const [thought, setThought] = useState('');
+  const [characterCount, setCharacterCount] = useState(0);
+  const [showTerms, setShowTerms] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [sliderValue, setSliderValue] = useState(0);
+  const [showWarning, setShowWarning] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
   const [birdState, setBirdState] = useState<'idle' | 'takeoff' | 'return'>('idle');
-  const [particles, setParticles] = useState<React.CSSProperties[]>([]);
+  const [particles, setParticles] = useState<ParticleStyles[]>([]);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
@@ -161,19 +164,19 @@ const Unburden: React.FC = () => {
     if (!textareaRef.current) return;
     
     const rect = textareaRef.current.getBoundingClientRect();
-    const particles: React.CSSProperties[] = [];
+    const newParticles: ParticleStyles[] = [];
     
     for (let i = 0; i < 50; i++) {
-      particles.push({
+      newParticles.push({
         width: Math.random() * 4 + 2 + 'px',
         height: Math.random() * 4 + 2 + 'px',
-        background: `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.5})`,
+        background: 'rgba(255, 255, 255, ' + (Math.random() * 0.5 + 0.5) + ')',
         left: rect.left + Math.random() * rect.width + 'px',
-        top: rect.top + Math.random() * rect.height + 'px',
+        top: rect.top + Math.random() * rect.height + 'px'
       });
     }
     
-    setParticles(particles);
+    setParticles(newParticles);
   };
 
   const handleRelease = () => {
@@ -213,7 +216,7 @@ const Unburden: React.FC = () => {
         <div className="text-center mb-8 relative">
           <h1 className="text-6xl md:text-7xl font-black text-white mb-2">
             UNBURDEN
-            <Bird className={`absolute -right-8 top-0 text-white ${birdState}`} />
+            <Bird className={'absolute -right-8 top-0 text-white bird-' + birdState} />
           </h1>
           <p className="text-xl text-white/90">A Safe Space for Your Thoughts</p>
         </div>
