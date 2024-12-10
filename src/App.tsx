@@ -1,4 +1,3 @@
-```typescript
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Unburden from './Unburden';
@@ -28,4 +27,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-```
