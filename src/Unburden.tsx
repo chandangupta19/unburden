@@ -1,4 +1,3 @@
-```typescript
 import React, { useState, useEffect, useRef } from 'react';
 import { Shield, Check, WifiOff } from 'lucide-react';
 import {
