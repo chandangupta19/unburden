@@ -1,4 +1,3 @@
-```typescript
 import React, { useEffect } from 'react';
 import { Lock, Cloud, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -93,4 +92,3 @@ const AboutUnburden: React.FC = () => {
 };
 
 export default AboutUnburden;
-```

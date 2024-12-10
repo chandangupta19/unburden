@@ -1,4 +1,3 @@
-```typescript
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -110,4 +109,3 @@ const PrivacyPolicy: React.FC = () => {
 };
 
 export default PrivacyPolicy;
-```
