@@ -9,7 +9,7 @@ import {
   AlertDialogFooter,
   AlertDialogAction,
 } from './components/ui/alert-dialog';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const MAX_CHARACTERS = 5000;
 const MIN_SLIDE_THRESHOLD = 90;
@@ -156,6 +156,7 @@ const Terms: React.FC<{
 );
 
 const Unburden: React.FC = () => {
+  const navigate = useNavigate();
   const [thought, setThought] = useState<string>('');
   const [characterCount, setCharacterCount] = useState<number>(0);
   const [showTerms, setShowTerms] = useState<boolean>(true);
@@ -171,6 +172,7 @@ const Unburden: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setShowTerms(true);
   }, []);
 
   useEffect(() => {
@@ -185,13 +187,14 @@ const Unburden: React.FC = () => {
       setPendingPath(path);
       setShowWarning(true);
     } else {
-      window.location.href = path;
+      navigate(path);
     }
   };
 
   const confirmNavigation = () => {
     if (pendingPath) {
-      window.location.href = pendingPath;
+      setShowWarning(false);
+      navigate(pendingPath);
     }
   };
 
@@ -333,9 +336,4 @@ const Unburden: React.FC = () => {
           setPendingPath(null);
         }}
       />
-      {showSuccess && <SuccessMessage />}
-    </div>
-  );
-};
-
-export default Unburden;
+      {showSuccess && 
