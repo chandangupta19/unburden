@@ -53,7 +53,7 @@ export const AlertDialogAction: React.FC<React.ButtonHTMLAttributes<HTMLButtonEl
   ...props 
 }) => (
   <button 
-    className={'bg-white/90 text-blue-600 px-4 py-2 rounded-lg hover:bg-white transition-colors ' + className}
+    className={'px-4 py-2 bg-white/90 text-blue-600 rounded-lg hover:bg-white transition-colors ' + className}
     {...props}
   >
     {children}

@@ -22,18 +22,39 @@ interface ParticleStyles extends React.CSSProperties {
 
 const Bird: React.FC<{ className?: string }> = ({ className = '' }) => (
   <svg 
-    viewBox="0 0 24 24" 
+    viewBox="0 0 40 30" 
     className={'w-8 h-8 ' + className}
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="1.5"
+    fill="currentColor"
   >
     <path 
-      d="M3 17.5c0 0 1.5-2.5 4-2.5s4 2.5 4 2.5m-8-5c0 0 2-2.5 4-2.5s4 2.5 4 2.5m4-5c-1.5-1.5-3.5-2-5.5-2s-4 0.5-5.5 2l11 0z"
-      strokeLinecap="round" 
-      strokeLinejoin="round"
+      d="M15,15 Q20,10 25,15 L30,12 Q35,10 38,15 L35,18 Q32,20 28,18 L25,17 Q20,22 15,17 Z"
     />
+    <path 
+      d="M20,15 Q25,10 30,15 Q25,18 20,15"
+    />
+    <circle cx="33" cy="14" r="2"/>
   </svg>
+);
+
+const NavigationWarning: React.FC<{
+  isOpen: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}> = ({ isOpen, onConfirm, onCancel }) => (
+  <AlertDialog open={isOpen}>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Unsaved Thoughts</AlertDialogTitle>
+        <AlertDialogDescription>
+          Your thoughts haven't been released yet. They will be lost if you leave this page. Are you sure?
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogAction onClick={onCancel}>Stay</AlertDialogAction>
+        <AlertDialogAction onClick={onConfirm}>Leave Page</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
 );
 
 const OnlineCheck: React.FC = () => {
@@ -94,7 +115,7 @@ const Particle: React.FC<{
 const SuccessMessage: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
     <div className="glass-panel px-8 py-4 rounded-lg animate-poof text-xl font-semibold">
-      Thoughts Released...
+      Poof... gone
     </div>
   </div>
 );
@@ -141,13 +162,15 @@ const Unburden: React.FC = () => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [sliderValue, setSliderValue] = useState<number>(0);
+  const [showWarning, setShowWarning] = useState<boolean>(false);
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [birdState, setBirdState] = useState<'idle' | 'takeoff' | 'return'>('idle');
   const [particles, setParticles] = useState<ParticleStyles[]>([]);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   useEffect(() => {
@@ -156,6 +179,21 @@ const Unburden: React.FC = () => {
       textareaRef.current.style.height = Math.max(200, textareaRef.current.scrollHeight) + 'px';
     }
   }, [thought]);
+
+  const handleNavigation = (path: string) => {
+    if (thought.trim()) {
+      setPendingPath(path);
+      setShowWarning(true);
+    } else {
+      window.location.href = path;
+    }
+  };
+
+  const confirmNavigation = () => {
+    if (pendingPath) {
+      window.location.href = pendingPath;
+    }
+  };
 
   const createParticles = () => {
     if (!textareaRef.current) return;
@@ -229,7 +267,7 @@ const Unburden: React.FC = () => {
               }}
               className={'w-full p-6 thought-input rounded-lg text-white min-h-[300px] resize-none ' + 
                 (isAnimating ? 'animate-fade-away' : '')}
-              placeholder="Release your thoughts here..."
+              placeholder="Write your thoughts here..."
               maxLength={MAX_CHARACTERS}
               disabled={isAnimating}
             />
@@ -266,21 +304,35 @@ const Unburden: React.FC = () => {
                 disabled={!thought || isAnimating}
               />
               <div className="text-white/80 mt-2">
-                {sliderValue < MIN_SLIDE_THRESHOLD ? 'Slide to Release →' : 'Let go...'}
+                {sliderValue < MIN_SLIDE_THRESHOLD ? 'Slide to Release the thoughts' : 'Let go...'}
               </div>
             </div>
           </div>
         </div>
 
         <footer className="footer-links">
-          <Link to="/about" className="footer-link">About UnburdenHQ</Link>
-          <Link to="/privacy" className="footer-link">Privacy Policy</Link>
-          <Link to="/terms" className="footer-link">Terms & Conditions</Link>
+          <button onClick={() => handleNavigation('/about')} className="footer-link">
+            About UnburdenHQ
+          </button>
+          <button onClick={() => handleNavigation('/privacy')} className="footer-link">
+            Privacy Policy
+          </button>
+          <button onClick={() => handleNavigation('/terms')} className="footer-link">
+            Terms & Conditions
+          </button>
         </footer>
       </div>
 
       <OnlineCheck />
       <Terms isOpen={showTerms} onAccept={() => setShowTerms(false)} />
+      <NavigationWarning
+        isOpen={showWarning}
+        onConfirm={confirmNavigation}
+        onCancel={() => {
+          setShowWarning(false);
+          setPendingPath(null);
+        }}
+      />
       {showSuccess && <SuccessMessage />}
     </div>
   );

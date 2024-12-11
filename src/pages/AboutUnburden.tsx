@@ -20,8 +20,8 @@ const AboutUnburden: React.FC = () => {
           <p className="text-white/80 mb-6">
             UnburdenHQ is your digital space for emotional release. We understand that life can be overwhelming, 
             and having a safe, private space to express emotions is essential. With UnburdenHQ, you can write down 
-            your thoughts, frustrations, or feelings, and when you're ready, a simple click of the "Release Thoughts" 
-            button erases them.
+            your thoughts, frustrations, or feelings, and when you're ready, simply slide the "Release Thoughts" 
+            button to let them fade away
           </p>
           
           <p className="text-white/80 mb-6">
