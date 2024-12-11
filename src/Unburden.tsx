@@ -36,6 +36,44 @@ const Bird: React.FC<{ className?: string }> = ({ className = '' }) => (
   </svg>
 );
 
+const OnlineCheck: React.FC = () => {
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  if (isOnline) return null;
+
+  return (
+    <AlertDialog open={true}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
+            <WifiOff className="text-white" />
+            Internet Connection Required
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            <p className="mb-4">
+              First-time access to UnburdenHQ requires an internet connection to verify and accept the latest terms and conditions.
+            </p>
+            <p>Please connect to the internet and refresh the page.</p>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
 const Particle: React.FC<{ 
   style: ParticleStyles;
   position: { x: number; y: number };
@@ -56,30 +94,9 @@ const Particle: React.FC<{
 const SuccessMessage: React.FC = () => (
   <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
     <div className="glass-panel px-8 py-4 rounded-lg animate-poof text-xl font-semibold">
-      Set free...
+      Thoughts Released...
     </div>
   </div>
-);
-
-const NavigationWarning: React.FC<{
-  isOpen: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}> = ({ isOpen, onConfirm, onCancel }) => (
-  <AlertDialog open={isOpen}>
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Unsaved Thoughts</AlertDialogTitle>
-        <AlertDialogDescription>
-          Your thoughts haven't been released yet. Are you sure you want to leave?
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogAction onClick={onCancel}>Stay</AlertDialogAction>
-        <AlertDialogAction onClick={onConfirm}>Leave Page</AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
 );
 
 const Terms: React.FC<{
@@ -95,7 +112,7 @@ const Terms: React.FC<{
         </AlertDialogTitle>
         <AlertDialogDescription>
           <div className="space-y-4 text-left">
-            <p className="text-sm text-white/80">
+            <p className="text-white/80">
               By using UnburdenHQ, you confirm:
             </p>
             <ul className="list-disc list-inside space-y-2 text-white/80">
@@ -118,19 +135,16 @@ const Terms: React.FC<{
 );
 
 const Unburden: React.FC = () => {
-  const [thought, setThought] = useState('');
-  const [characterCount, setCharacterCount] = useState(0);
-  const [showTerms, setShowTerms] = useState(true);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [sliderValue, setSliderValue] = useState(0);
-  const [showWarning, setShowWarning] = useState(false);
-  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const [thought, setThought] = useState<string>('');
+  const [characterCount, setCharacterCount] = useState<number>(0);
+  const [showTerms, setShowTerms] = useState<boolean>(true);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const [sliderValue, setSliderValue] = useState<number>(0);
   const [birdState, setBirdState] = useState<'idle' | 'takeoff' | 'return'>('idle');
   const [particles, setParticles] = useState<ParticleStyles[]>([]);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -142,22 +156,6 @@ const Unburden: React.FC = () => {
       textareaRef.current.style.height = Math.max(200, textareaRef.current.scrollHeight) + 'px';
     }
   }, [thought]);
-
-  const handleNavigation = (path: string) => {
-    if (thought.trim()) {
-      setPendingNavigation(path);
-      setShowWarning(true);
-    } else {
-      navigate(path);
-    }
-  };
-
-  const confirmNavigation = () => {
-    if (pendingNavigation) {
-      setShowWarning(false);
-      navigate(pendingNavigation);
-    }
-  };
 
   const createParticles = () => {
     if (!textareaRef.current) return;
@@ -275,27 +273,14 @@ const Unburden: React.FC = () => {
         </div>
 
         <footer className="footer-links">
-          <button onClick={() => handleNavigation('/about')} className="footer-link">
-            About UnburdenHQ
-          </button>
-          <button onClick={() => handleNavigation('/privacy')} className="footer-link">
-            Privacy Policy
-          </button>
-          <button onClick={() => handleNavigation('/terms')} className="footer-link">
-            Terms & Conditions
-          </button>
+          <Link to="/about" className="footer-link">About UnburdenHQ</Link>
+          <Link to="/privacy" className="footer-link">Privacy Policy</Link>
+          <Link to="/terms" className="footer-link">Terms & Conditions</Link>
         </footer>
       </div>
 
+      <OnlineCheck />
       <Terms isOpen={showTerms} onAccept={() => setShowTerms(false)} />
-      <NavigationWarning
-        isOpen={showWarning}
-        onConfirm={confirmNavigation}
-        onCancel={() => {
-          setShowWarning(false);
-          setPendingNavigation(null);
-        }}
-      />
       {showSuccess && <SuccessMessage />}
     </div>
   );
