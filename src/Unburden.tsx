@@ -336,4 +336,9 @@ const Unburden: React.FC = () => {
           setPendingPath(null);
         }}
       />
-      {showSuccess && 
+      {showSuccess && <SuccessMessage />}
+    </div>
+  );
+};
+
+export default Unburden;
