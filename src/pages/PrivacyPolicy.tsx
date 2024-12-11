@@ -35,7 +35,7 @@ const PrivacyPolicy: React.FC = () => {
             <h3 className="text-xl font-semibold mt-6 mb-3 text-white">2.1 User Content</h3>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
               <li>We do not store, save, or record any content you write on our platform</li>
-              <li>All content is immediately and permanently deleted after you click "Release Thoughts"</li>
+              <li>All content is immediately and permanently deleted after you slide to Release the thoughts</li>
               <li>We have no access to your written content at any time</li>
             </ul>
 
