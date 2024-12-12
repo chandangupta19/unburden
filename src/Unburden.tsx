@@ -20,22 +20,6 @@ interface ParticleStyles extends React.CSSProperties {
   '--duration'?: string;
 }
 
-const Bird: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <svg 
-    viewBox="0 0 40 30" 
-    className={'w-8 h-8 ' + className}
-    fill="currentColor"
-  >
-    <path 
-      d="M15,15 Q20,10 25,15 L30,12 Q35,10 38,15 L35,18 Q32,20 28,18 L25,17 Q20,22 15,17 Z"
-    />
-    <path 
-      d="M20,15 Q25,10 30,15 Q25,18 20,15"
-    />
-    <circle cx="33" cy="14" r="2"/>
-  </svg>
-);
-
 const NavigationWarning: React.FC<{
   isOpen: boolean;
   onConfirm: () => void;
@@ -165,7 +149,6 @@ const Unburden: React.FC = () => {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
-  const [birdState, setBirdState] = useState<'idle' | 'takeoff' | 'return'>('idle');
   const [particles, setParticles] = useState<ParticleStyles[]>([]);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -222,12 +205,10 @@ const Unburden: React.FC = () => {
     
     setIsAnimating(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setBirdState('takeoff');
     createParticles();
     
     setTimeout(() => {
       setShowSuccess(true);
-      setBirdState('return');
       setTimeout(() => {
         setShowSuccess(false);
         setThought('');
@@ -235,7 +216,6 @@ const Unburden: React.FC = () => {
         setIsAnimating(false);
         setSliderValue(0);
         setParticles([]);
-        setBirdState('idle');
       }, 1500);
     }, 800);
   };
@@ -254,7 +234,6 @@ const Unburden: React.FC = () => {
         <div className="text-center mb-8 relative">
           <h1 className="text-6xl md:text-7xl font-black text-white mb-2">
             UNBURDEN
-            <Bird className={'absolute -right-8 top-0 text-white bird-' + birdState} />
           </h1>
           <p className="text-xl text-white/90">A Safe Space for Your Thoughts</p>
         </div>
