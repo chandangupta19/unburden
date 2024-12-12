@@ -14,15 +14,97 @@ import AudioRecorder from './components/AudioRecorder';
 
 const MAX_CHARACTERS = 5000;
 const MIN_SLIDE_THRESHOLD = 90;
+const MAX_ATTEMPTS = 5;
+const COOLDOWN_TIME = 60000; // 1 minute in milliseconds
 
 interface ParticleStyles extends React.CSSProperties {
   '--tx'?: string;
   '--ty'?: string;
   '--duration'?: string;
 }
+const NavigationWarning: React.FC<{
+  isOpen: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}> = ({ isOpen, onConfirm, onCancel }) => (
+  <AlertDialog open={isOpen}>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Unsaved Thoughts</AlertDialogTitle>
+        <AlertDialogDescription>
+          Your thoughts haven't been released yet. They will be lost if you leave this page. Are you sure?
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogAction onClick={onCancel}>Stay</AlertDialogAction>
+        <AlertDialogAction onClick={onConfirm}>Leave Page</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+);
 
-// [Previous interface definitions remain the same]
-// NavigationWarning, OnlineCheck, Particle, SuccessMessage components remain the same
+const OnlineCheck: React.FC = () => {
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  if (isOnline) return null;
+
+  return (
+    <AlertDialog open={true}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
+            <WifiOff className="text-white" />
+            Internet Connection Required
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            <p className="mb-4">
+              First-time access to UnburdenHQ requires an internet connection to verify and accept the latest terms and conditions.
+            </p>
+            <p>Please connect to the internet and refresh the page.</p>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+const Particle: React.FC<{ 
+  style: ParticleStyles;
+  position: { x: number; y: number };
+}> = ({ style, position }) => (
+  <div
+    className="particle"
+    style={{
+      ...style,
+      left: position.x + 'px',
+      top: position.y + 'px',
+      '--tx': Math.random() * 200 - 100 + 'px',
+      '--ty': -Math.random() * 200 - 100 + 'px',
+      '--duration': 0.8 + Math.random() * 0.5 + 's'
+    } as React.CSSProperties}
+  />
+);
+
+const SuccessMessage: React.FC = () => (
+  <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+    <div className="glass-panel px-8 py-4 rounded-lg animate-poof text-xl font-semibold">
+      Poof... gone
+    </div>
+  </div>
+);
 
 const Terms: React.FC<{
   isOpen: boolean;
@@ -60,6 +142,25 @@ const Terms: React.FC<{
   </AlertDialog>
 );
 
+const CooldownAlert: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+}> = ({ isOpen, onClose }) => (
+  <AlertDialog open={isOpen}>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Taking a Brief Pause</AlertDialogTitle>
+        <AlertDialogDescription>
+          You've reached the maximum number of releases (5) for now. 
+          Please wait 1 minute before releasing more thoughts.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogAction onClick={onClose}>Understand</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+);
 const Unburden: React.FC = () => {
   const navigate = useNavigate();
   const [thought, setThought] = useState<string>('');
@@ -71,6 +172,9 @@ const Unburden: React.FC = () => {
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [inputMode, setInputMode] = useState<'text' | 'voice'>('text');
+  const [attemptCount, setAttemptCount] = useState<number>(0);
+  const [isInCooldown, setIsInCooldown] = useState<boolean>(false);
+  const [showCooldownAlert, setShowCooldownAlert] = useState<boolean>(false);
   const [particles, setParticles] = useState<ParticleStyles[]>([]);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -86,8 +190,7 @@ const Unburden: React.FC = () => {
       textareaRef.current.style.height = Math.max(200, textareaRef.current.scrollHeight) + 'px';
     }
   }, [thought]);
-
-  const handleNavigation = (path: string) => {
+const handleNavigation = (path: string) => {
     if (thought.trim()) {
       setPendingPath(path);
       setShowWarning(true);
@@ -126,6 +229,22 @@ const Unburden: React.FC = () => {
   const handleRelease = () => {
     if ((!thought && inputMode === 'text') || isAnimating || sliderValue < MIN_SLIDE_THRESHOLD) return;
     
+    if (isInCooldown) {
+      setShowCooldownAlert(true);
+      return;
+    }
+
+    if (attemptCount >= MAX_ATTEMPTS) {
+      setIsInCooldown(true);
+      setShowCooldownAlert(true);
+      setTimeout(() => {
+        setIsInCooldown(false);
+        setAttemptCount(0);
+        setShowCooldownAlert(false);
+      }, COOLDOWN_TIME);
+      return;
+    }
+    
     setIsAnimating(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     createParticles();
@@ -139,6 +258,7 @@ const Unburden: React.FC = () => {
         setIsAnimating(false);
         setSliderValue(0);
         setParticles([]);
+        setAttemptCount(prev => prev + 1);
       }, 1500);
     }, 800);
   };
@@ -153,14 +273,16 @@ const Unburden: React.FC = () => {
 
   const toggleInputMode = (mode: 'text' | 'voice') => {
     if (thought.trim()) {
-      // Show warning if there's unsaved content
+      setPendingPath(null);
+      setShowWarning(true);
       return;
     }
     setInputMode(mode);
     setSliderValue(0);
   };
 
-  return (
+  const remainingAttempts = MAX_ATTEMPTS - attemptCount;
+return (
     <div className="min-h-screen grid-pattern relative overflow-hidden">
       <div className="container mx-auto p-4 relative z-10">
         <div className="text-center mb-8 relative">
@@ -213,6 +335,11 @@ const Unburden: React.FC = () => {
                 <div className="absolute bottom-4 right-4 text-white/60 text-sm">
                   {characterCount}/{MAX_CHARACTERS}
                 </div>
+                {!isInCooldown && (
+                  <div className="absolute bottom-4 left-4 text-white/40 text-sm">
+                    {remainingAttempts} releases remaining
+                  </div>
+                )}
               </>
             ) : (
               <div className={isAnimating ? 'animate-fade-away' : ''}>
@@ -282,6 +409,12 @@ const Unburden: React.FC = () => {
         }}
       />
       {showSuccess && <SuccessMessage />}
+      {showCooldownAlert && (
+        <CooldownAlert 
+          isOpen={true} 
+          onClose={() => setShowCooldownAlert(false)} 
+        />
+      )}
     </div>
   );
 };
