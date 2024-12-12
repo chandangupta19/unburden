@@ -43,6 +43,32 @@ body {
   animation: particleFloat var(--duration) ease-out forwards;
 }
 
+/* Voice Recording Animation */
+@keyframes pulseRecording {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+.recording-pulse {
+  animation: pulseRecording 2s ease-in-out infinite;
+}
+
+/* Mode Toggle Buttons */
+.mode-toggle {
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.mode-toggle:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.mode-toggle.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 /* Enhanced Input Styles */
 .thought-input {
   background: rgba(255, 255, 255, 0.15);
@@ -56,6 +82,20 @@ body {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.4);
+}
+
+/* Voice Input Container */
+.voice-container {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.5rem;
+  padding: 2rem;
 }
 
 /* Slider Styles */
@@ -179,5 +219,10 @@ textarea::-webkit-scrollbar {
   }
   .grid-pattern {
     background-size: 20px 20px;
+  }
+  
+  .voice-container {
+    min-height: 250px;
+    padding: 1rem;
   }
 }

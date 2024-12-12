@@ -26,75 +26,101 @@ const PrivacyPolicy: React.FC = () => {
         <div className="space-y-8">
           <Section title="1. INTRODUCTION">
             <p className="text-white/80">
-              Welcome to UnburdenHQ ("the Platform"). This Privacy Policy explains how we handle any information when you use the Platform. 
-              Our core principle is to provide a space where you can express yourself freely while maintaining your privacy.
+              Welcome to UnburdenHQ ("the Platform"). This Privacy Policy explains in detail how we handle your information 
+              when you use the Platform. Our core principle is absolute privacy - your thoughts remain yours alone.
             </p>
           </Section>
 
-          <Section title="2. INFORMATION COLLECTION AND USE">
-            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">2.1 User Content</h3>
+          <Section title="2. HOW YOUR CONTENT EXISTS">
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">2.1 Text Input</h3>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>We do not store, save, or record any content you write on our platform</li>
-              <li>All content is immediately and permanently deleted after you slide to Release the thoughts</li>
-              <li>We have no access to your written content at any time</li>
+              <li>When you type, your text exists only temporarily in your device's memory (RAM)</li>
+              <li>Nothing is ever saved to your device's storage</li>
+              <li>No text is ever transmitted to any servers</li>
+              <li>All content is immediately discarded when you release your thoughts</li>
             </ul>
 
-            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">2.2 Site Analytics</h3>
-            <p className="text-white/80">
-              We use basic analytics to understand general site usage. This includes standard, anonymous usage data 
-              that helps us improve the platform.
-            </p>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">2.2 Voice Input</h3>
+            <ul className="list-disc pl-6 space-y-2 text-white/80">
+              <li>When you speak, your voice exists only momentarily in your device's memory</li>
+              <li>Audio is processed locally on your device only</li>
+              <li>No audio is ever recorded or saved anywhere</li>
+              <li>Voice data is immediately discarded as you speak</li>
+              <li>The experience is equivalent to speaking into an unplugged microphone</li>
+            </ul>
 
             <div className="bg-white/5 p-6 rounded-lg my-4 border border-white/10">
-              <p className="font-semibold mb-2 text-white">What is NOT collected:</p>
+              <p className="font-semibold mb-2 text-white">What is NOT collected or stored:</p>
               <ul className="list-disc pl-6 space-y-2 text-white/80">
                 <li>Your written content</li>
+                <li>Your voice recordings</li>
                 <li>Personal identification</li>
                 <li>User accounts or profiles</li>
+                <li>Device information</li>
+                <li>Usage patterns</li>
               </ul>
             </div>
           </Section>
 
-          <Section title="3. DATA SECURITY">
+          <Section title="3. TECHNICAL TRANSPARENCY">
+            <p className="text-white/80 mb-4">
+              For complete transparency about how the platform works:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-white/80">
+              <li>Your device's temporary memory (RAM) briefly holds your content while you type or speak</li>
+              <li>This temporary memory is automatically cleared when you:
+                <ul className="list-disc pl-6 mt-2">
+                  <li>Release your thoughts</li>
+                  <li>Close or refresh the page</li>
+                  <li>Navigate away from the platform</li>
+                </ul>
+              </li>
+              <li>No data persists beyond your current session</li>
+              <li>We have no servers storing or processing your content</li>
+            </ul>
+          </Section>
+
+          <Section title="4. SITE ANALYTICS">
             <p className="text-white/80">
-              We implement appropriate technical measures to maintain the security of our platform. However, 
-              please note that your content is only as secure as your own device and internet connection.
+              We use basic, anonymous site analytics from Netlify to understand general site usage. This includes:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-white/80">
+              <li>Page views (number of visits)</li>
+              <li>Basic performance metrics</li>
+              <li>No personal data or content is ever included in analytics</li>
+            </ul>
+          </Section>
+
+          <Section title="5. DATA SECURITY">
+            <p className="text-white/80">
+              Since we don't store any data, our security model is simple - your content exists only momentarily 
+              in your device's memory. The security of your experience depends only on your device and internet 
+              connection security.
             </p>
           </Section>
 
-          <Section title="4. CHILDREN'S PRIVACY">
+          <Section title="6. CHILDREN'S PRIVACY">
             <p className="text-white/80">
               Our platform is not intended for individuals under 18 years of age. We do not knowingly collect 
-              information from children.
+              or process any information from children.
             </p>
           </Section>
 
-          <Section title="5. CHANGES TO THIS POLICY">
+          <Section title="7. CHANGES TO THIS POLICY">
             <ul className="list-disc pl-6 space-y-2 text-white/80">
               <li>We reserve the right to modify this Privacy Policy at any time</li>
-              <li>Continued use after changes constitutes acceptance</li>
               <li>Changes will be effective immediately upon posting</li>
+              <li>Continued use after changes constitutes acceptance</li>
               <li>It is your responsibility to review this Privacy Policy periodically</li>
             </ul>
           </Section>
 
-          <Section title="6. CONTACT US">
+          <Section title="8. CONTACT US">
             <p className="text-white/80">
               For any questions about this Privacy Policy, please contact us at:
               <br />
               Email: umbrellalabs1@gmail.com
             </p>
-          </Section>
-
-          <Section title="7. CONSENT">
-            <p className="text-white/80">
-              By using UnburdenHQ, you acknowledge and agree to:
-            </p>
-            <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>The collection of basic analytics data as described above</li>
-              <li>All privacy terms outlined in this policy</li>
-              <li>By agreeing to these terms, you agree to terms and conditions of our third-party service providers</li>
-            </ul>
           </Section>
         </div>
 
