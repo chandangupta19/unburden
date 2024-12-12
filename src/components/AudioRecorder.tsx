@@ -7,7 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogAction,
-} from './components/ui/alert-dialog';
+} from '../ui/alert-dialog';
 
 interface AudioRecorderProps {
   isAnimating: boolean;

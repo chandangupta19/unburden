@@ -8,7 +8,7 @@ import {
   AlertDialogTitle,
   AlertDialogFooter,
   AlertDialogAction,
-} from './components/ui/alert-dialog';
+} from './ui/alert-dialog';
 import { Link, useNavigate } from 'react-router-dom';
 import AudioRecorder from './components/AudioRecorder';
 
