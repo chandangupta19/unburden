@@ -16,7 +16,7 @@ const MAX_CHARACTERS = 5000;
 const MIN_SLIDE_THRESHOLD = 90;
 const MAX_ATTEMPTS = 5;
 const COOLDOWN_TIME = 60000; // 1 minute in milliseconds
-const MIN_WORDS = 20; // Minimum words for text
+const MIN_WORDS = 20;
 
 interface ParticleStyles extends React.CSSProperties {
   '--tx'?: string;
@@ -171,11 +171,13 @@ const Unburden: React.FC = () => {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
+  const [pendingMode, setPendingMode] = useState<'text' | 'voice' | null>(null);
   const [inputMode, setInputMode] = useState<'text' | 'voice'>('voice'); // Default to voice
   const [globalAttemptCount, setGlobalAttemptCount] = useState<number>(0);
   const [isInCooldown, setIsInCooldown] = useState<boolean>(false);
   const [showCooldownAlert, setShowCooldownAlert] = useState<boolean>(false);
   const [particles, setParticles] = useState<ParticleStyles[]>([]);
+  const [canRelease, setCanRelease] = useState<boolean>(false);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const remainingAttempts = MAX_ATTEMPTS - globalAttemptCount;
@@ -204,6 +206,13 @@ const Unburden: React.FC = () => {
     if (pendingPath) {
       setShowWarning(false);
       navigate(pendingPath);
+    } else if (pendingMode) {
+      setInputMode(pendingMode);
+      setPendingMode(null);
+      setShowWarning(false);
+      setThought('');
+      setCharacterCount(0);
+      setSliderValue(0);
     }
   };
 
@@ -232,14 +241,13 @@ const Unburden: React.FC = () => {
       const wordCount = thought.trim().split(/\s+/).length;
       return wordCount >= MIN_WORDS;
     }
-    return true; // Audio check is handled in AudioRecorder component
+    return true; // Voice check is handled in AudioRecorder component
   };
 
   const handleRelease = () => {
-    if ((!thought && inputMode === 'text') || isAnimating || sliderValue < MIN_SLIDE_THRESHOLD) return;
+    if ((!thought && inputMode === 'text') || isAnimating || sliderValue < MIN_SLIDE_THRESHOLD || !canRelease) return;
     
     if (!checkMinimumContent()) {
-      // Show minimum content warning
       return;
     }
 
@@ -273,6 +281,7 @@ const Unburden: React.FC = () => {
         setSliderValue(0);
         setParticles([]);
         setGlobalAttemptCount(prev => prev + 1);
+        setCanRelease(false);
       }, 1500);
     }, 800);
   };
@@ -289,12 +298,13 @@ const Unburden: React.FC = () => {
     if (mode === inputMode) return;
     
     if (thought.trim()) {
-      setPendingPath(null);
+      setPendingMode(mode);
       setShowWarning(true);
       return;
     }
     setInputMode(mode);
     setSliderValue(0);
+    setCanRelease(false);
   };
   return (
     <div className="min-h-screen grid-pattern relative overflow-hidden">
@@ -314,16 +324,6 @@ const Unburden: React.FC = () => {
 
         <div className="flex justify-center gap-4 mb-8">
           <button
-            onClick={() => toggleInputMode('text')}
-            className={`flex items-center gap-2 px-4 py-2 rounded transition-colors mode-toggle ${
-              inputMode === 'text' ? 'active' : ''
-            }`}
-            disabled={isAnimating}
-          >
-            <Type size={20} />
-            <span>Text</span>
-          </button>
-          <button
             onClick={() => toggleInputMode('voice')}
             className={`flex items-center gap-2 px-4 py-2 rounded transition-colors mode-toggle ${
               inputMode === 'voice' ? 'active' : ''
@@ -332,6 +332,16 @@ const Unburden: React.FC = () => {
           >
             <Mic size={20} />
             <span>Voice</span>
+          </button>
+          <button
+            onClick={() => toggleInputMode('text')}
+            className={`flex items-center gap-2 px-4 py-2 rounded transition-colors mode-toggle ${
+              inputMode === 'text' ? 'active' : ''
+            }`}
+            disabled={isAnimating}
+          >
+            <Type size={20} />
+            <span>Text</span>
           </button>
         </div>
 
@@ -343,8 +353,10 @@ const Unburden: React.FC = () => {
                   ref={textareaRef}
                   value={thought}
                   onChange={(e) => {
-                    setThought(e.target.value);
-                    setCharacterCount(e.target.value.length);
+                    const newText = e.target.value;
+                    setThought(newText);
+                    setCharacterCount(newText.length);
+                    setCanRelease(newText.trim().split(/\s+/).length >= MIN_WORDS);
                   }}
                   className={'w-full p-6 thought-input rounded-lg text-white min-h-[300px] resize-none ' + 
                     (isAnimating ? 'animate-fade-away' : '')}
@@ -360,7 +372,7 @@ const Unburden: React.FC = () => {
               <div className={isAnimating ? 'animate-fade-away' : ''}>
                 <AudioRecorder
                   isAnimating={isAnimating}
-                  onRecordingComplete={handleRelease}
+                  onRecordingComplete={() => setCanRelease(true)}
                   disabled={sliderValue >= MIN_SLIDE_THRESHOLD}
                 />
               </div>
@@ -391,7 +403,7 @@ const Unburden: React.FC = () => {
                 value={sliderValue}
                 onChange={handleSliderChange}
                 className="release-slider w-full"
-                disabled={(!thought && inputMode === 'text') || isAnimating}
+                disabled={(!canRelease) || isAnimating}
               />
               <div className="text-white/80 mt-2">
                 {sliderValue < MIN_SLIDE_THRESHOLD ? 'Slide to Release the thoughts' : 'Let go...'}
@@ -421,6 +433,7 @@ const Unburden: React.FC = () => {
         onCancel={() => {
           setShowWarning(false);
           setPendingPath(null);
+          setPendingMode(null);
         }}
       />
       {showSuccess && <SuccessMessage />}
