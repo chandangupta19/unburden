@@ -26,7 +26,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [showPermissionError, setShowPermissionError] = useState<boolean>(false);
   const [showMinTimeError, setShowMinTimeError] = useState<boolean>(false);
-  const [finalRecordingTime, setFinalRecordingTime] = useState<string>('');
+  const [finalRecordingTime, setFinalRecordingTime] = useState<string>('0:00');
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const audioStream = useRef<MediaStream | null>(null);
@@ -115,6 +115,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         setShowMinTimeError(true);
         return;
       }
+      setFinalRecordingTime(formatTime(recordingTime));
       mediaRecorder.current.stop();
       stopTimer();
       setIsRecording(false);
@@ -181,7 +182,9 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         
         <div className="text-center mt-4">
           <div className="text-xl font-medium text-white">
-            {formatTime(recordingTime)}/{formatTime(MAX_RECORDING_TIME)}
+            {!isRecording && !isPaused && finalRecordingTime !== '0:00' 
+              ? `${finalRecordingTime}/5:00`
+              : `${formatTime(recordingTime)}/5:00`}
           </div>
           <p className="text-white/60 text-sm mt-2">
             {!isRecording && !isPaused && recordingTime === 0 && (
