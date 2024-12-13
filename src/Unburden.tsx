@@ -16,6 +16,8 @@ const MAX_CHARACTERS = 5000;
 const MIN_SLIDE_THRESHOLD = 90;
 const MAX_ATTEMPTS = 5;
 const COOLDOWN_TIME = 60000; // 1 minute in milliseconds
+const MIN_WORDS = 20; // Minimum words for text
+const MIN_AUDIO_TIME = 30; // Minimum seconds for audio
 
 interface ParticleStyles extends React.CSSProperties {
   '--tx'?: string;
@@ -30,14 +32,14 @@ const NavigationWarning: React.FC<{
   <AlertDialog open={isOpen}>
     <AlertDialogContent>
       <AlertDialogHeader>
-        <AlertDialogTitle>Unsaved Thoughts</AlertDialogTitle>
+        <AlertDialogTitle>Switch Mode</AlertDialogTitle>
         <AlertDialogDescription>
-          Your thoughts haven't been released yet. They will be lost if you leave this page. Are you sure?
+          Your current thoughts haven't been released yet. They will be lost if you switch. Are you sure?
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogAction onClick={onCancel}>Stay</AlertDialogAction>
-        <AlertDialogAction onClick={onConfirm}>Leave Page</AlertDialogAction>
+        <AlertDialogAction onClick={onCancel}>Stay Here</AlertDialogAction>
+        <AlertDialogAction onClick={onConfirm}>Switch Mode</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
@@ -105,7 +107,6 @@ const SuccessMessage: React.FC = () => (
     </div>
   </div>
 );
-
 const Terms: React.FC<{
   isOpen: boolean;
   onAccept: () => void;
@@ -125,9 +126,9 @@ const Terms: React.FC<{
             <ul className="list-disc list-inside space-y-2 text-white/80">
               <li>You must be at least 18 years old or meet your location's minimum age requirement</li>
               <li>This is not a substitute for professional mental health services</li>
-              <li>Your thoughts (written or spoken) exist only temporarily in your device's memory</li>
-              <li>Nothing is ever saved to storage or sent to any servers</li>
-              <li>All content is immediately and completely discarded upon release</li>
+              <li>Your thoughts exist only momentarily in your device's temporary memory</li>
+              <li>Nothing is ever saved or sent anywhere</li>
+              <li>Everything is discarded instantly upon release</li>
               <li>You accept our <Link to="/terms" className="text-white underline hover:text-white/80">Terms & Conditions</Link> and <Link to="/privacy" className="text-white underline hover:text-white/80">Privacy Policy</Link></li>
             </ul>
           </div>
@@ -171,13 +172,14 @@ const Unburden: React.FC = () => {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
-  const [inputMode, setInputMode] = useState<'text' | 'voice'>('text');
-  const [attemptCount, setAttemptCount] = useState<number>(0);
+  const [inputMode, setInputMode] = useState<'text' | 'voice'>('voice'); // Default to voice
+  const [globalAttemptCount, setGlobalAttemptCount] = useState<number>(0);
   const [isInCooldown, setIsInCooldown] = useState<boolean>(false);
   const [showCooldownAlert, setShowCooldownAlert] = useState<boolean>(false);
   const [particles, setParticles] = useState<ParticleStyles[]>([]);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const remainingAttempts = MAX_ATTEMPTS - globalAttemptCount;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -190,7 +192,7 @@ const Unburden: React.FC = () => {
       textareaRef.current.style.height = Math.max(200, textareaRef.current.scrollHeight) + 'px';
     }
   }, [thought]);
-const handleNavigation = (path: string) => {
+  const handleNavigation = (path: string) => {
     if (thought.trim()) {
       setPendingPath(path);
       setShowWarning(true);
@@ -226,20 +228,33 @@ const handleNavigation = (path: string) => {
     setParticles(newParticles);
   };
 
+  const checkMinimumContent = () => {
+    if (inputMode === 'text') {
+      const wordCount = thought.trim().split(/\s+/).length;
+      return wordCount >= MIN_WORDS;
+    }
+    return true; // Audio check is handled in AudioRecorder component
+  };
+
   const handleRelease = () => {
     if ((!thought && inputMode === 'text') || isAnimating || sliderValue < MIN_SLIDE_THRESHOLD) return;
     
+    if (!checkMinimumContent()) {
+      // Show minimum content warning
+      return;
+    }
+
     if (isInCooldown) {
       setShowCooldownAlert(true);
       return;
     }
 
-    if (attemptCount >= MAX_ATTEMPTS) {
+    if (globalAttemptCount >= MAX_ATTEMPTS) {
       setIsInCooldown(true);
       setShowCooldownAlert(true);
       setTimeout(() => {
         setIsInCooldown(false);
-        setAttemptCount(0);
+        setGlobalAttemptCount(0);
         setShowCooldownAlert(false);
       }, COOLDOWN_TIME);
       return;
@@ -258,7 +273,7 @@ const handleNavigation = (path: string) => {
         setIsAnimating(false);
         setSliderValue(0);
         setParticles([]);
-        setAttemptCount(prev => prev + 1);
+        setGlobalAttemptCount(prev => prev + 1);
       }, 1500);
     }, 800);
   };
@@ -272,6 +287,8 @@ const handleNavigation = (path: string) => {
   };
 
   const toggleInputMode = (mode: 'text' | 'voice') => {
+    if (mode === inputMode) return;
+    
     if (thought.trim()) {
       setPendingPath(null);
       setShowWarning(true);
@@ -280,9 +297,7 @@ const handleNavigation = (path: string) => {
     setInputMode(mode);
     setSliderValue(0);
   };
-
-  const remainingAttempts = MAX_ATTEMPTS - attemptCount;
-return (
+  return (
     <div className="min-h-screen grid-pattern relative overflow-hidden">
       <div className="container mx-auto p-4 relative z-10">
         <div className="text-center mb-8 relative">
@@ -292,11 +307,17 @@ return (
           <p className="text-xl text-white/90">A Safe Space for Your Thoughts</p>
         </div>
 
+        <div className="text-center mb-6">
+          <div className="attempts-counter">
+            {remainingAttempts} {remainingAttempts === 1 ? 'release' : 'releases'} remaining
+          </div>
+        </div>
+
         <div className="flex justify-center gap-4 mb-8">
           <button
             onClick={() => toggleInputMode('text')}
-            className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${
-              inputMode === 'text' ? 'bg-white/20' : 'bg-white/10 hover:bg-white/15'
+            className={`flex items-center gap-2 px-4 py-2 rounded transition-colors mode-toggle ${
+              inputMode === 'text' ? 'active' : ''
             }`}
             disabled={isAnimating}
           >
@@ -305,8 +326,8 @@ return (
           </button>
           <button
             onClick={() => toggleInputMode('voice')}
-            className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${
-              inputMode === 'voice' ? 'bg-white/20' : 'bg-white/10 hover:bg-white/15'
+            className={`flex items-center gap-2 px-4 py-2 rounded transition-colors mode-toggle ${
+              inputMode === 'voice' ? 'active' : ''
             }`}
             disabled={isAnimating}
           >
@@ -328,18 +349,13 @@ return (
                   }}
                   className={'w-full p-6 thought-input rounded-lg text-white min-h-[300px] resize-none ' + 
                     (isAnimating ? 'animate-fade-away' : '')}
-                  placeholder="Write your thoughts here..."
+                  placeholder="Write your thoughts here... (minimum 20 words)"
                   maxLength={MAX_CHARACTERS}
                   disabled={isAnimating}
                 />
                 <div className="absolute bottom-4 right-4 text-white/60 text-sm">
                   {characterCount}/{MAX_CHARACTERS}
                 </div>
-                {!isInCooldown && (
-                  <div className="absolute bottom-4 left-4 text-white/40 text-sm">
-                    {remainingAttempts} releases remaining
-                  </div>
-                )}
               </>
             ) : (
               <div className={isAnimating ? 'animate-fade-away' : ''}>
@@ -379,7 +395,7 @@ return (
                 disabled={(!thought && inputMode === 'text') || isAnimating}
               />
               <div className="text-white/80 mt-2">
-                {sliderValue < MIN_SLIDE_THRESHOLD ? 'Slide to Release' : 'Let go...'}
+                {sliderValue < MIN_SLIDE_THRESHOLD ? 'Slide to Release the thoughts' : 'Let go...'}
               </div>
             </div>
           </div>

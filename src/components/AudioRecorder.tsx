@@ -24,15 +24,12 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [showPermissionError, setShowPermissionError] = useState<boolean>(false);
-  const [attemptCount, setAttemptCount] = useState<number>(0);
-  const [isInCooldown, setIsInCooldown] = useState<boolean>(false);
-  const [showCooldownMessage, setShowCooldownMessage] = useState<boolean>(false);
+  const [finalRecordingTime, setFinalRecordingTime] = useState<string>('');
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
 
   const MAX_RECORDING_TIME = 300; // 5 minutes in seconds
-  const MAX_ATTEMPTS = 5;
-  const COOLDOWN_TIME = 60000; // 1 minute in milliseconds
+  const MIN_RECORDING_TIME = 30; // 30 seconds minimum
 
   useEffect(() => {
     return () => {
@@ -47,37 +44,23 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   }, [isRecording]);
 
   const startRecording = async () => {
-    if (isInCooldown) {
-      setShowCooldownMessage(true);
-      return;
-    }
-    
-    if (attemptCount >= MAX_ATTEMPTS) {
-      setIsInCooldown(true);
-      setShowCooldownMessage(true);
-      setTimeout(() => {
-        setIsInCooldown(false);
-        setAttemptCount(0);
-        setShowCooldownMessage(false);
-      }, COOLDOWN_TIME);
-      return;
-    }
-
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder.current = new MediaRecorder(stream);
       
-      // We don't store or process the data
       mediaRecorder.current.ondataavailable = () => {};
 
       mediaRecorder.current.onstop = () => {
         stream.getTracks().forEach(track => track.stop());
-        onRecordingComplete();
-        setAttemptCount(prev => prev + 1);
+        if (recordingTime >= MIN_RECORDING_TIME) {
+          onRecordingComplete();
+        }
       };
 
       mediaRecorder.current.start();
       setIsRecording(true);
+      setRecordingTime(0);
+      setFinalRecordingTime('');
       startTimer();
     } catch (err) {
       setShowPermissionError(true);
@@ -86,10 +69,15 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
   const stopRecording = () => {
     if (mediaRecorder.current && isRecording) {
+      if (recordingTime < MIN_RECORDING_TIME) {
+        setShowPermissionError(true);
+        return;
+      }
+      
+      setFinalRecordingTime(formatTime(recordingTime));
       mediaRecorder.current.stop();
       setIsRecording(false);
       stopTimer();
-      setRecordingTime(0);
     }
   };
 
@@ -98,7 +86,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       setRecordingTime(prev => {
         if (prev >= MAX_RECORDING_TIME - 1) {
           stopRecording();
-          return 0;
+          return prev;
         }
         return prev + 1;
       });
@@ -117,16 +105,18 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const remainingAttempts = MAX_ATTEMPTS - attemptCount;
-
   return (
     <div className="flex flex-col items-center space-y-4">
       <div className="flex items-center space-x-4">
         {!isRecording ? (
           <button
             onClick={startRecording}
-            disabled={disabled || isAnimating || isInCooldown}
-            className="p-4 rounded-full bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-50"
+            disabled={disabled || isAnimating}
+            className={`p-4 rounded-full transition-colors ${
+              disabled || isAnimating 
+                ? 'bg-white/10 opacity-50' 
+                : 'bg-white/10 hover:bg-white/20'
+            }`}
             title="Start speaking"
           >
             <Mic className="w-6 h-6 text-white" />
@@ -134,73 +124,56 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         ) : (
           <button
             onClick={stopRecording}
-            className="p-4 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors"
+            className="p-4 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors recording-pulse"
             title="Stop speaking"
           >
             <Square className="w-6 h-6 text-white" />
           </button>
         )}
-        {isRecording && (
-          <div className="text-white/80">
-            {formatTime(recordingTime)} / {formatTime(MAX_RECORDING_TIME)}
-          </div>
-        )}
+        <div className="text-white/80 min-w-[60px]">
+          {isRecording ? formatTime(recordingTime) : finalRecordingTime || '0:00'}
+        </div>
       </div>
 
-      <div className="text-center">
-        <p className="text-white/60 text-sm max-w-md">
-          {isRecording 
-            ? "Speaking... Your voice exists only in this moment and is never stored or recorded." 
-            : "Click to start speaking (max 5 minutes). Your voice will exist only in the moment, like speaking into the wind."}
-        </p>
-        {!isInCooldown && !isRecording && (
-          <p className="text-white/40 text-xs mt-2">
-            {remainingAttempts} attempts remaining
-          </p>
-        )}
-      </div>
+      <p className="text-white/60 text-sm text-center">
+        {isRecording 
+          ? `Speaking... (minimum ${MIN_RECORDING_TIME} seconds)` 
+          : "Click to start speaking and share your thoughts"}
+      </p>
 
       <AlertDialog open={showPermissionError}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <AlertCircle className="text-white" />
-              Microphone Access Required
+              {recordingTime < MIN_RECORDING_TIME && recordingTime > 0
+                ? "Minimum Recording Time"
+                : "Microphone Access Required"}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              <p className="mb-4">
-                Please allow microphone access to use the voice feature.
-              </p>
-              <p className="mb-4">
-                For your privacy:
-              </p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Your voice exists only momentarily in your device's memory</li>
-                <li>Nothing is ever recorded or stored</li>
-                <li>No audio data is sent anywhere</li>
-                <li>Everything is discarded instantly</li>
-              </ul>
+              {recordingTime < MIN_RECORDING_TIME && recordingTime > 0 ? (
+                <p className="mb-4">
+                  Please speak for at least {MIN_RECORDING_TIME} seconds before releasing your thoughts.
+                </p>
+              ) : (
+                <>
+                  <p className="mb-4">
+                    Please allow microphone access to use the voice feature.
+                  </p>
+                  <p className="mb-4">
+                    For your privacy:
+                  </p>
+                  <ul className="list-disc pl-6 space-y-2">
+                    <li>Your voice exists only momentarily in your device's temporary memory</li>
+                    <li>Nothing is ever saved or sent anywhere</li>
+                    <li>Everything is discarded instantly</li>
+                  </ul>
+                </>
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction onClick={() => setShowPermissionError(false)}>
-              Understand
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog open={showCooldownMessage}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Taking a Brief Pause</AlertDialogTitle>
-            <AlertDialogDescription>
-              You've reached the maximum number of voice releases (5) for now.
-              Please wait 1 minute before trying again.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setShowCooldownMessage(false)}>
               Understand
             </AlertDialogAction>
           </AlertDialogFooter>
