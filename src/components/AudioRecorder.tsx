@@ -99,7 +99,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       };
 
       mediaRecorder.current.onstop = () => {
-        if (recordingTime < MIN_RECORDING_TIME) {
+        if (recordingTime <= MIN_RECORDING_TIME) {
           setShowMinTimeError(true);
           return;
         }
