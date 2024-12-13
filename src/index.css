@@ -50,7 +50,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
   transition: all 0.3s ease;
-  caret-color: white;
+  caret-color: white !important;
 }
 
 .thought-input:focus {
@@ -76,6 +76,17 @@ body {
   width: 100%;
   height: 2px;
   background: white;
+}
+
+/* Recording Animation */
+@keyframes recordingPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+.recording-pulse {
+  animation: recordingPulse 2s ease-in-out infinite;
 }
 
 /* Slider Styles */
@@ -115,7 +126,7 @@ body {
   height: 50px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 25px;
-  transition: width 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 /* Fade Animations */
@@ -160,15 +171,17 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Recording Animation */
-@keyframes recordingPulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
-}
-
-.recording-pulse {
-  animation: recordingPulse 2s ease-in-out infinite;
+/* Attempts Counter */
+.attempts-counter {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Footer Styles */
@@ -211,17 +224,4 @@ textarea::-webkit-scrollbar {
   .grid-pattern {
     background-size: 20px 20px;
   }
-}
-
-/* Attempts Counter */
-.attempts-counter {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  border-radius: 20px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
 }

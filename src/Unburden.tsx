@@ -31,14 +31,14 @@ const NavigationWarning: React.FC<{
   <AlertDialog open={isOpen}>
     <AlertDialogContent>
       <AlertDialogHeader>
-        <AlertDialogTitle>Switch Mode</AlertDialogTitle>
+        <AlertDialogTitle>Unsaved Thoughts</AlertDialogTitle>
         <AlertDialogDescription>
-          Your current thoughts haven't been released yet. They will be lost if you switch. Are you sure?
+          Your thoughts haven't been released yet. They will be lost if you leave this page. Are you sure?
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogAction onClick={onCancel}>Stay Here</AlertDialogAction>
-        <AlertDialogAction onClick={onConfirm}>Switch Mode</AlertDialogAction>
+        <AlertDialogAction onClick={onCancel}>Stay</AlertDialogAction>
+        <AlertDialogAction onClick={onConfirm}>Leave Page</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
@@ -172,12 +172,14 @@ const Unburden: React.FC = () => {
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [pendingMode, setPendingMode] = useState<'text' | 'voice' | null>(null);
-  const [inputMode, setInputMode] = useState<'text' | 'voice'>('voice'); // Default to voice
+  const [inputMode, setInputMode] = useState<'text' | 'voice'>('voice');
   const [globalAttemptCount, setGlobalAttemptCount] = useState<number>(0);
   const [isInCooldown, setIsInCooldown] = useState<boolean>(false);
   const [showCooldownAlert, setShowCooldownAlert] = useState<boolean>(false);
   const [particles, setParticles] = useState<ParticleStyles[]>([]);
   const [canRelease, setCanRelease] = useState<boolean>(false);
+  const [isVoiceRecording, setIsVoiceRecording] = useState<boolean>(false);
+  const [currentRecordingTime, setCurrentRecordingTime] = useState<number>(0);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const remainingAttempts = MAX_ATTEMPTS - globalAttemptCount;
@@ -194,7 +196,8 @@ const Unburden: React.FC = () => {
     }
   }, [thought]);
   const handleNavigation = (path: string) => {
-    if (thought.trim()) {
+    if ((inputMode === 'text' && thought.trim()) || 
+        (inputMode === 'voice' && (isVoiceRecording || currentRecordingTime > 0))) {
       setPendingPath(path);
       setShowWarning(true);
     } else {
@@ -206,6 +209,7 @@ const Unburden: React.FC = () => {
     if (pendingPath) {
       setShowWarning(false);
       navigate(pendingPath);
+      setPendingPath(null);
     } else if (pendingMode) {
       setInputMode(pendingMode);
       setPendingMode(null);
@@ -213,6 +217,8 @@ const Unburden: React.FC = () => {
       setThought('');
       setCharacterCount(0);
       setSliderValue(0);
+      setCanRelease(false);
+      setCurrentRecordingTime(0);
     }
   };
 
@@ -236,21 +242,9 @@ const Unburden: React.FC = () => {
     setParticles(newParticles);
   };
 
-  const checkMinimumContent = () => {
-    if (inputMode === 'text') {
-      const wordCount = thought.trim().split(/\s+/).length;
-      return wordCount >= MIN_WORDS;
-    }
-    return true; // Voice check is handled in AudioRecorder component
-  };
-
   const handleRelease = () => {
-    if ((!thought && inputMode === 'text') || isAnimating || sliderValue < MIN_SLIDE_THRESHOLD || !canRelease) return;
+    if ((!thought && inputMode === 'text') || isAnimating || !canRelease) return;
     
-    if (!checkMinimumContent()) {
-      return;
-    }
-
     if (isInCooldown) {
       setShowCooldownAlert(true);
       return;
@@ -271,25 +265,30 @@ const Unburden: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     createParticles();
     
-    setTimeout(() => {
-      setShowSuccess(true);
+    requestAnimationFrame(() => {
+      setSliderValue(100);
+      
       setTimeout(() => {
-        setShowSuccess(false);
-        setThought('');
-        setCharacterCount(0);
-        setIsAnimating(false);
-        setSliderValue(0);
-        setParticles([]);
-        setGlobalAttemptCount(prev => prev + 1);
-        setCanRelease(false);
-      }, 1500);
-    }, 800);
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          setThought('');
+          setCharacterCount(0);
+          setIsAnimating(false);
+          setSliderValue(0);
+          setParticles([]);
+          setGlobalAttemptCount(prev => prev + 1);
+          setCanRelease(false);
+          setCurrentRecordingTime(0);
+        }, 1500);
+      }, 800);
+    });
   };
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     setSliderValue(value);
-    if (value >= MIN_SLIDE_THRESHOLD) {
+    if (value === 100) {
       handleRelease();
     }
   };
@@ -297,7 +296,8 @@ const Unburden: React.FC = () => {
   const toggleInputMode = (mode: 'text' | 'voice') => {
     if (mode === inputMode) return;
     
-    if (thought.trim()) {
+    if ((inputMode === 'text' && thought.trim()) || 
+        (inputMode === 'voice' && (isVoiceRecording || currentRecordingTime > 0))) {
       setPendingMode(mode);
       setShowWarning(true);
       return;
@@ -305,6 +305,12 @@ const Unburden: React.FC = () => {
     setInputMode(mode);
     setSliderValue(0);
     setCanRelease(false);
+    setCurrentRecordingTime(0);
+  };
+
+  const handleRecordingChange = (isRecording: boolean, time: number) => {
+    setIsVoiceRecording(isRecording);
+    setCurrentRecordingTime(time);
   };
   return (
     <div className="min-h-screen grid-pattern relative overflow-hidden">
@@ -313,7 +319,7 @@ const Unburden: React.FC = () => {
           <h1 className="text-6xl md:text-7xl font-black text-white mb-2">
             UNBURDEN
           </h1>
-          <p className="text-xl text-white/90">A Safe Space for Your Thoughts</p>
+          <p className="text-xl text-white/90">Express & Release Your Thoughts, Feel Lighter</p>
         </div>
 
         <div className="text-center mb-6">
@@ -373,6 +379,7 @@ const Unburden: React.FC = () => {
                 <AudioRecorder
                   isAnimating={isAnimating}
                   onRecordingComplete={() => setCanRelease(true)}
+                  onRecordingChange={handleRecordingChange}
                   disabled={sliderValue >= MIN_SLIDE_THRESHOLD}
                 />
               </div>

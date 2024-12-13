@@ -13,12 +13,14 @@ import {
 interface AudioRecorderProps {
   isAnimating: boolean;
   onRecordingComplete: () => void;
+  onRecordingChange: (isRecording: boolean, time: number) => void;
   disabled?: boolean;
 }
 
 const AudioRecorder: React.FC<AudioRecorderProps> = ({ 
   isAnimating, 
   onRecordingComplete,
+  onRecordingChange,
   disabled = false 
 }) => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -26,7 +28,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [showPermissionError, setShowPermissionError] = useState<boolean>(false);
   const [showMinTimeError, setShowMinTimeError] = useState<boolean>(false);
-  const [finalRecordingTime, setFinalRecordingTime] = useState<string>('0:00');
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const audioStream = useRef<MediaStream | null>(null);
@@ -42,6 +43,24 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       }
     };
   }, []);
+
+  useEffect(() => {
+    onRecordingChange(isRecording, recordingTime);
+  }, [isRecording, recordingTime, onRecordingChange]);
+
+  const checkMicrophonePermission = async () => {
+    try {
+      const permissionStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+      if (permissionStatus.state === 'denied') {
+        setShowPermissionError(true);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.log('Permission check not supported');
+      return true; // Proceed with getUserMedia
+    }
+  };
 
   const startTimer = () => {
     timerInterval.current = setInterval(() => {
@@ -62,6 +81,10 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   };
 
   const startRecording = async () => {
+    if (!(await checkMicrophonePermission())) {
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioStream.current = stream;
@@ -80,7 +103,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
           setShowMinTimeError(true);
           return;
         }
-        setFinalRecordingTime(formatTime(recordingTime));
         if (audioStream.current) {
           audioStream.current.getTracks().forEach(track => track.stop());
         }
@@ -115,7 +137,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         setShowMinTimeError(true);
         return;
       }
-      setFinalRecordingTime(formatTime(recordingTime));
       mediaRecorder.current.stop();
       stopTimer();
       setIsRecording(false);
@@ -182,16 +203,17 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         
         <div className="text-center mt-4">
           <div className="text-xl font-medium text-white">
-            {!isRecording && !isPaused && finalRecordingTime !== '0:00' 
-              ? `${finalRecordingTime}/5:00`
-              : `${formatTime(recordingTime)}/5:00`}
+            {formatTime(recordingTime)}/5:00
           </div>
           <p className="text-white/60 text-sm mt-2">
             {!isRecording && !isPaused && recordingTime === 0 && (
               "Click to start recording (minimum 30 seconds)"
             )}
-            {isRecording && !isPaused && (
+            {isRecording && !isPaused && recordingTime < MIN_RECORDING_TIME && (
               "Recording... (minimum 30 seconds)"
+            )}
+            {isRecording && !isPaused && recordingTime >= MIN_RECORDING_TIME && (
+              "Recording..."
             )}
             {isPaused && (
               "Recording paused"
