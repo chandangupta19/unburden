@@ -17,7 +17,6 @@ const MIN_SLIDE_THRESHOLD = 90;
 const MAX_ATTEMPTS = 5;
 const COOLDOWN_TIME = 60000; // 1 minute in milliseconds
 const MIN_WORDS = 20; // Minimum words for text
-const MIN_AUDIO_TIME = 30; // Minimum seconds for audio
 
 interface ParticleStyles extends React.CSSProperties {
   '--tx'?: string;
