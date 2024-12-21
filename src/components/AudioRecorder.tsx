@@ -107,6 +107,10 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
           audioStream.current.getTracks().forEach(track => track.stop());
         }
         onRecordingComplete();
+        setRecordingTime(0);
+        setIsRecording(false);
+        setIsPaused(false);
+        stopTimer();
       };
 
       mediaRecorder.current.start();
@@ -138,9 +142,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         return;
       }
       mediaRecorder.current.stop();
-      stopTimer();
-      setIsRecording(false);
-      setIsPaused(false);
     }
   };
 
