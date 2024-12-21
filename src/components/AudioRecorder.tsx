@@ -99,7 +99,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       };
 
       mediaRecorder.current.onstop = () => {
-        if (recordingTime <= MIN_RECORDING_TIME) {
+        if (recordingTime < MIN_RECORDING_TIME) {
           setShowMinTimeError(true);
           return;
         }
@@ -254,7 +254,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
                 For your privacy:
               </p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Your voice exists only momentarily in your device's temporary memory</li>
+                <li>Your voice exists only in your device's temporary memory</li>
                 <li>Nothing is ever saved or sent anywhere</li>
                 <li>Everything is discarded instantly</li>
               </ul>
