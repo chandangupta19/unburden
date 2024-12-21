@@ -122,7 +122,7 @@ const Terms: React.FC<{
             <ul className="list-disc list-inside space-y-2 text-white/80">
               <li>You must be at least 18 years old. Or, you must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years</li>
               <li>This is not a substitute for professional mental health services</li>
-              <li>Your thoughts, written or spoken, exist only momentarily in your device's temporary memory</li>
+              <li>Your thoughts, written or spoken, exist only in your device's temporary memory</li>
               <li>Nothing is stored permanently - Everything is discarded when released</li>
               <li>You accept our <Link to="/terms" className="text-white underline hover:text-white/80">Terms & Conditions</Link> and <Link to="/privacy" className="text-white underline hover:text-white/80">Privacy Policy</Link></li>
             </ul>

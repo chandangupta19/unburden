@@ -73,13 +73,6 @@ const AboutUnburden: React.FC = () => {
           </div>
         </div>
 
-        <div className="glass-panel rounded-lg p-6 mt-8">
-          <h3 className="text-xl font-semibold text-white mb-4">How It Works</h3>
-          <p className="text-white/80">
-            Your thoughts, written or spoken, exist only momentarily while you type or speak, and disappear completely when released. Think of it like writing on a fogged mirror - present only until you wipe it away.
-          </p>
-        </div>
-
         <div className="glass-panel rounded-lg p-6 mt-8 mb-8">
           <p className="text-sm font-medium text-white/80">
             <strong className="text-white">Disclaimer:</strong> UnburdenHQ is not a substitute for professional mental health advice or therapy. If you are experiencing severe emotional distress, please seek help from a qualified professional.
