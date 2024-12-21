@@ -24,42 +24,40 @@ const TermsAndConditions: React.FC = () => {
         </div>
 
         <div className="space-y-8">
-          <Section title="1. ACCEPTANCE OF TERMS">
+          <Section title="1. AGE REQUIREMENT">
             <p className="text-white/80">
-              By accessing and using UnburdenHQ ("the Platform"), you agree to be bound by these Terms and Conditions
-              and our Privacy Policy. Please read them carefully to understand how your content exists on our platform.
+              You must be at least 18 years old. Or, you must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years.
             </p>
           </Section>
 
-          <Section title="2. AGE REQUIREMENT">
+          <Section title="2. PLATFORM PURPOSE">
+            <p className="text-white/80">
+              UnburdenHQ is a digital platform for expressing thoughts and emotions. It is NOT a substitute for professional mental health services. We do not provide medical advice, counseling, or therapy.
+            </p>
+          </Section>
+
+          <Section title="3. HOW YOUR CONTENT EXISTS">
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">Text Input:</h3>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>You must be at least 18 years old to use the Platform</li>
-              <li>If your location requires a higher minimum age, you must meet that requirement</li>
+              <li>Your typed content exists only in your device's temporary memory while you write</li>
+              <li>Content remains only until you release it or leave the page</li>
+              <li>Nothing is written to permanent storage</li>
+            </ul>
+
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">Voice Input:</h3>
+            <ul className="list-disc pl-6 space-y-2 text-white/80">
+              <li>Audio is processed in real-time using your device's temporary memory</li>
+              <li>Paused recordings are temporarily held in memory</li>
+              <li>All audio data is cleared upon release or when you leave the page</li>
             </ul>
           </Section>
 
-          <Section title="3. PLATFORM PURPOSE AND LIMITATIONS">
+          <Section title="4. THIRD PARTY SERVICES">
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>UnburdenHQ is a digital platform for expressing thoughts and emotions</li>
-              <li>It is NOT a substitute for professional mental health services</li>
-              <li>We do not provide medical advice, counseling, or therapy</li>
-              <li>The platform offers a temporary space for expression, not storage</li>
-            </ul>
-          </Section>
-
-          <Section title="4. HOW YOUR CONTENT EXISTS">
-            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">4.1 Text Content</h3>
-            <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>Your typed thoughts exist only temporarily in your device's memory</li>
-              <li>Nothing is saved to storage or transmitted to servers</li>
-              <li>Content is immediately discarded upon release</li>
-            </ul>
-
-            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">4.2 Voice Content</h3>
-            <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>Your spoken thoughts exist only momentarily in your device's memory</li>
-              <li>No audio is recorded or saved anywhere</li>
-              <li>Voice is processed locally and immediately discarded</li>
+              <li>We use Netlify for hosting and basic anonymous analytics</li>
+              <li>By using UnburdenHQ, you agree to Netlify's Terms of Service and Privacy Policy</li>
+              <li>Analytics data is limited to basic site usage with no personal identification</li>
+              <li>No third-party services have access to your content</li>
             </ul>
           </Section>
 
@@ -71,73 +69,24 @@ const TermsAndConditions: React.FC = () => {
               <li>Not use the platform for illegal purposes</li>
               <li>Not attempt to circumvent platform security</li>
               <li>Accept responsibility for all content you create</li>
-              <li>Understand the temporary nature of all content</li>
             </ul>
           </Section>
 
-          <Section title="6. PRIVACY AND DATA HANDLING">
+          <Section title="6. LIMITATIONS AND DISCLAIMERS">
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>Your content exists only temporarily in your device's memory while in use</li>
-              <li>No content is ever saved to storage systems</li>
-              <li>No content is ever transmitted to servers</li>
-              <li>All content is immediately discarded upon release</li>
-              <li>We collect only anonymous site analytics as described in our Privacy Policy</li>
-            </ul>
-          </Section>
-
-          <Section title="7. THIRD-PARTY SERVICES">
-            <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>The Platform uses minimal third-party services for basic functionality</li>
-              <li>Netlify provides anonymous site analytics only</li>
-              <li>No third-party services have access to your content</li>
-            </ul>
-          </Section>
-
-          <Section title="8. DISCLAIMERS">
-            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">8.1 Service Provided "As Is"</h3>
-            <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>The platform is provided without warranties of any kind</li>
-              <li>We do not guarantee uninterrupted or error-free service</li>
-            </ul>
-
-            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">8.2 Mental Health Disclaimer</h3>
-            <ul className="list-disc pl-6 space-y-2 text-white/80">
+              <li>The platform is provided "as is" without warranties</li>
+              <li>We do not guarantee uninterrupted service</li>
               <li>This is not a mental health service</li>
               <li>Seek professional help for mental health concerns</li>
-              <li>Not a substitute for professional treatment or advice</li>
             </ul>
           </Section>
 
-          <Section title="9. LIMITATION OF LIABILITY">
-            <p className="text-white/80 mb-3">We are not liable for:</p>
+          <Section title="7. CHANGES TO TERMS">
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>Content you create</li>
-              <li>Your use of the platform</li>
-              <li>Any damages arising from platform use</li>
-              <li>Technical issues or service interruptions</li>
-              <li>Third-party service functionality or availability</li>
+              <li>We reserve the right to modify these terms</li>
+              <li>Changes are effective immediately upon posting</li>
+              <li>Continued use constitutes acceptance of changes</li>
             </ul>
-          </Section>
-
-          <Section title="10. MODIFICATIONS">
-            <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>We reserve the right to modify these terms at any time</li>
-              <li>Changes will be effective immediately upon posting</li>
-              <li>Continued use after changes constitutes acceptance</li>
-              <li>It is your responsibility to review these terms periodically</li>
-            </ul>
-          </Section>
-
-          <Section title="11. GOVERNING LAW">
-            <p className="text-white/80">Users must comply with their local laws when using the Platform.</p>
-          </Section>
-
-          <Section title="12. CONTACT">
-            <p className="text-white/80">
-              For questions about these terms, contact:
-              <br />
-              Email: umbrellalabs1@gmail.com
-            </p>
           </Section>
         </div>
 

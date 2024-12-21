@@ -26,101 +26,60 @@ const PrivacyPolicy: React.FC = () => {
         <div className="space-y-8">
           <Section title="1. INTRODUCTION">
             <p className="text-white/80">
-              Welcome to UnburdenHQ ("the Platform"). This Privacy Policy explains in detail how we handle your information 
-              when you use the Platform. Our core principle is absolute privacy - your thoughts remain yours alone.
+              UnburdenHQ is designed with privacy at its core. We believe in complete transparency about how your content exists within our platform. This Privacy Policy explains our practices and commitments to your privacy.
             </p>
           </Section>
 
           <Section title="2. HOW YOUR CONTENT EXISTS">
-            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">2.1 Text Input</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">Text Content:</h3>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>When you type, your text exists only temporarily in your device's memory (RAM)</li>
-              <li>Nothing is ever saved to your device's storage</li>
-              <li>No text is ever transmitted to any servers</li>
-              <li>All content is immediately discarded when you release your thoughts</li>
+              <li>When you type, your text exists only in your device's temporary memory while you write</li>
+              <li>Content remains only until you release it or leave the page</li>
+              <li>Nothing is written to permanent storage</li>
+              <li>Content is automatically cleared when you release thoughts or leave the page</li>
             </ul>
 
-            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">2.2 Voice Input</h3>
+            <h3 className="text-xl font-semibold mt-6 mb-3 text-white">Voice Content:</h3>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>When you speak, your voice exists only momentarily in your device's memory</li>
-              <li>Audio is processed locally on your device only</li>
-              <li>No audio is ever recorded or saved anywhere</li>
-              <li>Voice data is immediately discarded as you speak</li>
-              <li>The experience is equivalent to speaking into an unplugged microphone</li>
+              <li>When recording, audio is processed using your device's temporary memory</li>
+              <li>Audio stays in temporary memory to enable features like pause/resume</li>
+              <li>Nothing is written to permanent storage</li>
+              <li>All audio data is cleared when you release recording or leave the page</li>
             </ul>
-
-            <div className="bg-white/5 p-6 rounded-lg my-4 border border-white/10">
-              <p className="font-semibold mb-2 text-white">What is NOT collected or stored:</p>
-              <ul className="list-disc pl-6 space-y-2 text-white/80">
-                <li>Your written content</li>
-                <li>Your voice recordings</li>
-                <li>Personal identification</li>
-                <li>User accounts or profiles</li>
-                <li>Device information</li>
-                <li>Usage patterns</li>
-              </ul>
-            </div>
           </Section>
 
-          <Section title="3. TECHNICAL TRANSPARENCY">
+          <Section title="3. ANALYTICS AND THIRD-PARTY SERVICES">
             <p className="text-white/80 mb-4">
-              For complete transparency about how the platform works:
+              We use Netlify for hosting and basic anonymous analytics:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>Your device's temporary memory (RAM) briefly holds your content while you type or speak</li>
-              <li>This temporary memory is automatically cleared when you:
-                <ul className="list-disc pl-6 mt-2">
-                  <li>Release your thoughts</li>
-                  <li>Close or refresh the page</li>
-                  <li>Navigate away from the platform</li>
-                </ul>
-              </li>
-              <li>No data persists beyond your current session</li>
-              <li>We have no servers storing or processing your content</li>
+              <li>Only basic site usage data is collected (like page views)</li>
+              <li>No personal identification</li>
+              <li>No content tracking</li>
+              <li>By using UnburdenHQ, you agree to Netlify's Privacy Policy and Terms of Service</li>
             </ul>
           </Section>
 
-          <Section title="4. SITE ANALYTICS">
-            <p className="text-white/80">
-              We use basic, anonymous site analytics from Netlify to understand general site usage. This includes:
-            </p>
+          <Section title="4. WHAT WE DON'T DO">
+            <p className="text-white/80">We do not:</p>
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>Page views (number of visits)</li>
-              <li>Basic performance metrics</li>
-              <li>No personal data or content is ever included in analytics</li>
+              <li>Use permanent storage</li>
+              <li>Create backups</li>
             </ul>
           </Section>
 
-          <Section title="5. DATA SECURITY">
+          <Section title="5. AGE REQUIREMENT">
             <p className="text-white/80">
-              Since we don't store any data, our security model is simple - your content exists only momentarily 
-              in your device's memory. The security of your experience depends only on your device and internet 
-              connection security.
+              You must be at least 18 years old. Or, you must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years.
             </p>
           </Section>
 
-          <Section title="6. CHILDREN'S PRIVACY">
-            <p className="text-white/80">
-              Our platform is not intended for individuals under 18 years of age. We do not knowingly collect 
-              or process any information from children.
-            </p>
-          </Section>
-
-          <Section title="7. CHANGES TO THIS POLICY">
+          <Section title="6. CHANGES TO THIS POLICY">
             <ul className="list-disc pl-6 space-y-2 text-white/80">
-              <li>We reserve the right to modify this Privacy Policy at any time</li>
-              <li>Changes will be effective immediately upon posting</li>
-              <li>Continued use after changes constitutes acceptance</li>
-              <li>It is your responsibility to review this Privacy Policy periodically</li>
+              <li>We reserve the right to modify this policy at any time</li>
+              <li>Changes are effective immediately upon posting</li>
+              <li>Your continued use constitutes acceptance of changes</li>
             </ul>
-          </Section>
-
-          <Section title="8. CONTACT US">
-            <p className="text-white/80">
-              For any questions about this Privacy Policy, please contact us at:
-              <br />
-              Email: umbrellalabs1@gmail.com
-            </p>
           </Section>
         </div>
 

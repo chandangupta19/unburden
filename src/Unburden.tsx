@@ -68,13 +68,10 @@ const OnlineCheck: React.FC = () => {
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <WifiOff className="text-white" />
-            Internet Connection Required
+            Internet Required
           </AlertDialogTitle>
           <AlertDialogDescription>
-            <p className="mb-4">
-              First-time access to UnburdenHQ requires an internet connection to verify and accept the latest terms and conditions.
-            </p>
-            <p>Please connect to the internet and refresh the page.</p>
+            Internet connection is required to use UnburdenHQ.
           </AlertDialogDescription>
         </AlertDialogHeader>
       </AlertDialogContent>
@@ -123,11 +120,10 @@ const Terms: React.FC<{
               Welcome to UnburdenHQ. For complete transparency, please understand:
             </p>
             <ul className="list-disc list-inside space-y-2 text-white/80">
-              <li>You must be at least 18 years old or meet your location's minimum age requirement</li>
+              <li>You must be at least 18 years old. Or, you must meet the minimum age required by your location or any other applicable laws governing you, which may exceed 18 years</li>
               <li>This is not a substitute for professional mental health services</li>
-              <li>Your thoughts exist only momentarily in your device's temporary memory</li>
-              <li>Nothing is ever saved or sent anywhere</li>
-              <li>Everything is discarded instantly upon release</li>
+              <li>Your thoughts, written or spoken, exist only momentarily in your device's temporary memory</li>
+              <li>Nothing is stored permanently - Everything is discarded when released</li>
               <li>You accept our <Link to="/terms" className="text-white underline hover:text-white/80">Terms & Conditions</Link> and <Link to="/privacy" className="text-white underline hover:text-white/80">Privacy Policy</Link></li>
             </ul>
           </div>

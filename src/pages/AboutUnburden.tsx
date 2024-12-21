@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Lock, Cloud, Heart, Mic } from 'lucide-react';
+import { Lock, Cloud, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const AboutUnburden: React.FC = () => {
@@ -18,14 +18,7 @@ const AboutUnburden: React.FC = () => {
 
         <div className="glass-panel rounded-lg p-8 mb-8">
           <p className="text-white/80 mb-6">
-            UnburdenHQ is your digital space for emotional release. We understand that life can be overwhelming, 
-            and having a safe, private space to express emotions is essential. With UnburdenHQ, you can write or speak 
-            your thoughts, frustrations, or feelings, and when you're ready, simply release them to let them fade away.
-          </p>
-          
-          <p className="text-white/80 mb-6">
-            This act of releasing your thoughts is designed to help you reflect, process, and move forward. Your privacy 
-            is our utmost priority - nothing is ever stored or saved.
+            UnburdenHQ is your digital space for emotional release. Whether through voice or text, express your thoughts freely in a completely private environment. Like speaking to the wind or writing in sand, your words exist only in the moment and vanish instantly upon release.
           </p>
         </div>
 
@@ -39,7 +32,11 @@ const AboutUnburden: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg mb-2 text-white">Complete Privacy</h3>
-                  <p className="text-white/70">Your thoughts (written or spoken) exist only temporarily in your device's memory and are never stored or transmitted anywhere.</p>
+                  <p className="text-white/70">
+                    - Your thoughts, written or spoken, exist only while you express them
+                    <br/>
+                    - Nothing is stored permanently and vanishes instantly upon release
+                  </p>
                 </div>
               </div>
             </div>
@@ -50,20 +47,14 @@ const AboutUnburden: React.FC = () => {
                   <Cloud className="text-white" size={24} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2 text-white">Release & Let Go</h3>
-                  <p className="text-white/70">Your words vanish instantly after release, leaving no digital footprint - just like speaking into the wind.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="glass-panel rounded-lg p-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-white/10">
-                  <Mic className="text-white" size={24} />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg mb-2 text-white">Write or Speak</h3>
-                  <p className="text-white/70">Express yourself through text or voice - both options are completely private and temporary.</p>
+                  <h3 className="font-semibold text-lg mb-2 text-white">Express Freely</h3>
+                  <p className="text-white/70">
+                    - Share your thoughts through text or voice
+                    <br/>
+                    - Take your time, pause when needed
+                    <br/>
+                    - Release when you're ready
+                  </p>
                 </div>
               </div>
             </div>
@@ -74,8 +65,8 @@ const AboutUnburden: React.FC = () => {
                   <Heart className="text-white" size={24} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-2 text-white">Express Yourself</h3>
-                  <p className="text-white/70">A safe space to express and release overwhelming thoughts in whatever way feels natural to you.</p>
+                  <h3 className="font-semibold text-lg mb-2 text-white">Safe Space</h3>
+                  <p className="text-white/70">No accounts needed</p>
                 </div>
               </div>
             </div>
@@ -84,23 +75,15 @@ const AboutUnburden: React.FC = () => {
 
         <div className="glass-panel rounded-lg p-6 mt-8">
           <h3 className="text-xl font-semibold text-white mb-4">How It Works</h3>
-          <ul className="list-disc pl-6 space-y-2 text-white/80">
-            <li>Your content exists only temporarily in your device's memory while you type or speak</li>
-            <li>Nothing is ever saved to storage or transmitted to servers</li>
-            <li>All content is immediately discarded upon release</li>
-            <li>The experience is private and temporary by design</li>
-          </ul>
+          <p className="text-white/80">
+            Your thoughts, written or spoken, exist only momentarily while you type or speak, and disappear completely when released. Think of it like writing on a fogged mirror - present only until you wipe it away.
+          </p>
         </div>
 
         <div className="glass-panel rounded-lg p-6 mt-8 mb-8">
           <p className="text-sm font-medium text-white/80">
-            <strong className="text-white">Disclaimer:</strong> UnburdenHQ is not a substitute for professional mental health advice or therapy. 
-            If you are experiencing severe emotional distress, please seek help from a qualified professional.
+            <strong className="text-white">Disclaimer:</strong> UnburdenHQ is not a substitute for professional mental health advice or therapy. If you are experiencing severe emotional distress, please seek help from a qualified professional.
           </p>
-        </div>
-
-        <div className="text-center text-white/60">
-          Contact us: umbrellalabs1@gmail.com
         </div>
 
         <footer className="footer-links">
