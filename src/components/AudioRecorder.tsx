@@ -48,20 +48,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     onRecordingChange(isRecording, recordingTime);
   }, [isRecording, recordingTime, onRecordingChange]);
 
-  const checkMicrophonePermission = async () => {
-    try {
-      const permissionStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-      if (permissionStatus.state === 'denied') {
-        setShowPermissionError(true);
-        return false;
-      }
-      return true;
-    } catch (err) {
-      console.log('Permission check not supported');
-      return true; // Proceed with getUserMedia
-    }
-  };
-
   const startTimer = () => {
     timerInterval.current = setInterval(() => {
       setRecordingTime(prev => {
@@ -81,10 +67,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   };
 
   const startRecording = async () => {
-    if (!(await checkMicrophonePermission())) {
-      return;
-    }
-
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioStream.current = stream;
@@ -107,10 +89,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
           audioStream.current.getTracks().forEach(track => track.stop());
         }
         onRecordingComplete();
-        setRecordingTime(0);
-        setIsRecording(false);
-        setIsPaused(false);
-        stopTimer();
       };
 
       mediaRecorder.current.start();
@@ -137,11 +115,14 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
   const stopRecording = () => {
     if (mediaRecorder.current && isRecording) {
-      if (recordingTime < MIN_RECORDING_TIME) {
+      if (recordingTime < MIN_RECORDING_TIME) {  // Changed from <= to <
         setShowMinTimeError(true);
         return;
       }
       mediaRecorder.current.stop();
+      stopTimer();
+      setIsRecording(false);
+      setIsPaused(false);
     }
   };
 
