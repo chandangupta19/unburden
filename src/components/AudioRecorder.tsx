@@ -48,20 +48,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     onRecordingChange(isRecording, recordingTime);
   }, [isRecording, recordingTime, onRecordingChange]);
 
-  const checkMicrophonePermission = async () => {
-    try {
-      const permissionStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-      if (permissionStatus.state === 'denied') {
-        setShowPermissionError(true);
-        return false;
-      }
-      return true;
-    } catch (err) {
-      console.log('Permission check not supported');
-      return true; // Proceed with getUserMedia
-    }
-  };
-
   const startTimer = () => {
     timerInterval.current = setInterval(() => {
       setRecordingTime(prev => {
@@ -81,10 +67,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   };
 
   const startRecording = async () => {
-    if (!(await checkMicrophonePermission())) {
-      return;
-    }
-
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioStream.current = stream;
@@ -99,13 +81,14 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       };
 
       mediaRecorder.current.onstop = () => {
-        if (recordingTime < MIN_RECORDING_TIME) {  // Changed from <= to <
+        if (recordingTime < MIN_RECORDING_TIME) {
           setShowMinTimeError(true);
           return;
         }
         if (audioStream.current) {
           audioStream.current.getTracks().forEach(track => track.stop());
         }
+        setRecordingTime(0);
         onRecordingComplete();
       };
 
@@ -133,14 +116,14 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
   const stopRecording = () => {
     if (mediaRecorder.current && isRecording) {
-      if (recordingTime < MIN_RECORDING_TIME) {  // Changed from <= to <
+      if (recordingTime < MIN_RECORDING_TIME) {
         setShowMinTimeError(true);
         return;
       }
-      mediaRecorder.current.stop();
       stopTimer();
       setIsRecording(false);
       setIsPaused(false);
+      mediaRecorder.current.stop();
     }
   };
 
