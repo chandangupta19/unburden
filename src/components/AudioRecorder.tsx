@@ -27,13 +27,11 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [showPermissionError, setShowPermissionError] = useState<boolean>(false);
-  const [showMinTimeError, setShowMinTimeError] = useState<boolean>(false);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const audioStream = useRef<MediaStream | null>(null);
 
   const MAX_RECORDING_TIME = 300; // 5 minutes in seconds
-  const MIN_RECORDING_TIME = 29.5; // Slightly less than 30 seconds to account for lag
 
   useEffect(() => {
     return () => {
@@ -99,10 +97,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       };
 
       mediaRecorder.current.onstop = () => {
-        if (recordingTime < MIN_RECORDING_TIME) {
-          setShowMinTimeError(true);
-          return;
-        }
         if (audioStream.current) {
           audioStream.current.getTracks().forEach(track => track.stop());
         }
@@ -134,14 +128,10 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
   const stopRecording = () => {
     if (mediaRecorder.current && isRecording) {
-      if (recordingTime < MIN_RECORDING_TIME) {
-        setShowMinTimeError(true);
-        return;
-      }
-      mediaRecorder.current.stop();
       stopTimer();
       setIsRecording(false);
       setIsPaused(false);
+      mediaRecorder.current.stop();
     }
   };
 
@@ -208,12 +198,9 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
           </div>
           <p className="text-white/60 text-sm mt-2">
             {!isRecording && !isPaused && recordingTime === 0 && (
-              "Click to start recording (minimum 30 seconds)"
+              "Click to start recording"
             )}
-            {isRecording && !isPaused && recordingTime < MIN_RECORDING_TIME && (
-              "Recording... (minimum 30 seconds)"
-            )}
-            {isRecording && !isPaused && recordingTime >= MIN_RECORDING_TIME && (
+            {isRecording && !isPaused && (
               "Recording..."
             )}
             {isPaused && (
@@ -222,23 +209,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
           </p>
         </div>
       </div>
-
-      <AlertDialog open={showMinTimeError}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Minimum Recording Time</AlertDialogTitle>
-            <AlertDialogDescription>
-              Please record for at least 30 seconds before stopping. 
-              You can continue recording from where you left off.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setShowMinTimeError(false)}>
-              Continue Recording
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       <AlertDialog open={showPermissionError}>
         <AlertDialogContent>
@@ -255,7 +225,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
                 For your privacy:
               </p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Your voice exists only momentarily in your device's temporary memory</li>
+                <li>Your voice exists only in your device's temporary memory</li>
                 <li>Nothing is ever saved or sent anywhere</li>
                 <li>Everything is discarded instantly</li>
               </ul>

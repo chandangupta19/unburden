@@ -15,14 +15,14 @@ import AudioRecorder from './components/AudioRecorder';
 const MAX_CHARACTERS = 5000;
 const MIN_SLIDE_THRESHOLD = 90;
 const MAX_ATTEMPTS = 5;
-const COOLDOWN_TIME = 60000; // 1 minute in milliseconds
-const MIN_WORDS = 20;
+const COOLDOWN_TIME = 600000; // 10 minutes in milliseconds
 
 interface ParticleStyles extends React.CSSProperties {
   '--tx'?: string;
   '--ty'?: string;
   '--duration'?: string;
 }
+
 const NavigationWarning: React.FC<{
   isOpen: boolean;
   onConfirm: () => void;
@@ -103,6 +103,7 @@ const SuccessMessage: React.FC = () => (
     </div>
   </div>
 );
+
 const Terms: React.FC<{
   isOpen: boolean;
   onAccept: () => void;
@@ -148,7 +149,7 @@ const CooldownAlert: React.FC<{
         <AlertDialogTitle>Taking a Brief Pause</AlertDialogTitle>
         <AlertDialogDescription>
           You've reached the maximum number of releases (5) for now. 
-          Please wait 1 minute before releasing more thoughts.
+          Please wait 10 minutes before releasing more thoughts.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
@@ -157,6 +158,7 @@ const CooldownAlert: React.FC<{
     </AlertDialogContent>
   </AlertDialog>
 );
+
 const Unburden: React.FC = () => {
   const navigate = useNavigate();
   const [thought, setThought] = useState<string>('');
@@ -178,7 +180,6 @@ const Unburden: React.FC = () => {
   const [currentRecordingTime, setCurrentRecordingTime] = useState<number>(0);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const remainingAttempts = MAX_ATTEMPTS - globalAttemptCount;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -191,6 +192,7 @@ const Unburden: React.FC = () => {
       textareaRef.current.style.height = Math.max(200, textareaRef.current.scrollHeight) + 'px';
     }
   }, [thought]);
+
   const handleNavigation = (path: string) => {
     if ((inputMode === 'text' && thought.trim()) || 
         (inputMode === 'voice' && (isVoiceRecording || currentRecordingTime > 0))) {
@@ -239,7 +241,7 @@ const Unburden: React.FC = () => {
   };
 
   const handleRelease = () => {
-    if ((!thought && inputMode === 'text') || isAnimating || !canRelease) return;
+    if ((!thought && inputMode === 'text') || isAnimating) return;
     
     if (isInCooldown) {
       setShowCooldownAlert(true);
@@ -307,7 +309,9 @@ const Unburden: React.FC = () => {
   const handleRecordingChange = (isRecording: boolean, time: number) => {
     setIsVoiceRecording(isRecording);
     setCurrentRecordingTime(time);
+    setCanRelease(true);
   };
+
   return (
     <div className="min-h-screen grid-pattern relative overflow-hidden">
       <div className="container mx-auto p-4 relative z-10">
@@ -316,12 +320,6 @@ const Unburden: React.FC = () => {
             UNBURDEN
           </h1>
           <p className="text-xl text-white/90">Express & Release Your Thoughts, Feel Lighter</p>
-        </div>
-
-        <div className="text-center mb-6">
-          <div className="attempts-counter">
-            {remainingAttempts} {remainingAttempts === 1 ? 'release' : 'releases'} remaining
-          </div>
         </div>
 
         <div className="flex justify-center gap-4 mb-8">
@@ -358,11 +356,11 @@ const Unburden: React.FC = () => {
                     const newText = e.target.value;
                     setThought(newText);
                     setCharacterCount(newText.length);
-                    setCanRelease(newText.trim().split(/\s+/).length >= MIN_WORDS);
+                    setCanRelease(newText.trim().length > 0);
                   }}
                   className={'w-full p-6 thought-input rounded-lg text-white min-h-[300px] resize-none ' + 
                     (isAnimating ? 'animate-fade-away' : '')}
-                  placeholder="Write your thoughts here... (minimum 20 words)"
+                  placeholder="Write your thoughts here..."
                   maxLength={MAX_CHARACTERS}
                   disabled={isAnimating}
                 />
@@ -372,7 +370,7 @@ const Unburden: React.FC = () => {
               </>
             ) : (
               <div className={isAnimating ? 'animate-fade-away' : ''}>
-                <AudioRecorder
+                  <AudioRecorder
                   isAnimating={isAnimating}
                   onRecordingComplete={() => setCanRelease(true)}
                   onRecordingChange={handleRecordingChange}
@@ -408,8 +406,9 @@ const Unburden: React.FC = () => {
                 className="release-slider w-full"
                 disabled={(!canRelease) || isAnimating}
               />
-              <div className="text-white/80 mt-2">
-                {sliderValue < MIN_SLIDE_THRESHOLD ? 'Slide to Release the thoughts' : 'Let go...'}
+              <div className="text-white/80 mt-2 flex items-center justify-center gap-2">
+                <span>Slide to Release the thoughts</span>
+                <span className="text-white/60">({globalAttemptCount}/{MAX_ATTEMPTS})</span>
               </div>
             </div>
           </div>
