@@ -263,7 +263,7 @@ const Unburden: React.FC = () => {
   const handleRecordingChange = (isRecording: boolean, time: number) => {
     setIsVoiceRecording(isRecording);
     setCurrentRecordingTime(time);
-    setCanRelease(true);
+    setCanRelease(time > 0);
   };
   return (
     <div className="min-h-screen grid-pattern relative overflow-hidden">

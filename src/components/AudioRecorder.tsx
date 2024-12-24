@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Mic, Square, Play, AlertCircle } from 'lucide-react';
 import { 
   AlertDialog,
@@ -27,53 +27,19 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [showPermissionError, setShowPermissionError] = useState<boolean>(false);
+  const [showTimeAlert, setShowTimeAlert] = useState<boolean>(false);
   
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const audioStream = useRef<MediaStream | null>(null);
-  const pausedTime = useRef<number>(0);
 
-  const MAX_RECORDING_TIME = 300;
-
-  const resetRecording = useCallback(() => {
-    if (timerInterval.current) {
-      clearInterval(timerInterval.current);
-      timerInterval.current = null;
-    }
-    setRecordingTime(0);
-    setIsRecording(false);
-    setIsPaused(false);
-    pausedTime.current = 0;
-    if (audioStream.current) {
-      audioStream.current.getTracks().forEach(track => track.stop());
-      audioStream.current = null;
-    }
-    mediaRecorder.current = null;
-  }, []);
-
-  const stopTimer = () => {
-    if (timerInterval.current) {
-      clearInterval(timerInterval.current);
-      timerInterval.current = null;
-    }
-  };
-
-  const startTimer = () => {
-    stopTimer();
-    timerInterval.current = setInterval(() => {
-      setRecordingTime(prev => {
-        if (prev >= MAX_RECORDING_TIME - 1) {
-          pauseRecording();
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 1000);
-  };
+  const MAX_RECORDING_TIME = 600; // 10 minutes in seconds
 
   useEffect(() => {
     return () => {
-      stopTimer();
+      if (timerInterval.current) {
+        clearInterval(timerInterval.current);
+      }
       if (audioStream.current) {
         audioStream.current.getTracks().forEach(track => track.stop());
       }
@@ -81,15 +47,44 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   }, []);
 
   useEffect(() => {
-    const hasContent = recordingTime > 0;
-    onRecordingChange(isRecording, hasContent ? recordingTime : 0);
+    onRecordingChange(isRecording, recordingTime);
   }, [isRecording, recordingTime, onRecordingChange]);
 
   useEffect(() => {
     if (isAnimating) {
-      resetRecording();
+      // Reset everything on release
+      if (timerInterval.current) {
+        clearInterval(timerInterval.current);
+      }
+      if (audioStream.current) {
+        audioStream.current.getTracks().forEach(track => track.stop());
+      }
+      setRecordingTime(0);
+      setIsRecording(false);
+      setIsPaused(false);
+      setShowTimeAlert(false);
+      mediaRecorder.current = null;
+      audioStream.current = null;
     }
-  }, [isAnimating, resetRecording]);
+  }, [isAnimating]);
+
+  const startTimer = () => {
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
+    }
+    timerInterval.current = setInterval(() => {
+      setRecordingTime(prev => {
+        if (prev >= MAX_RECORDING_TIME - 1) {
+          if (isRecording) {
+            pauseRecording();
+          }
+          setShowTimeAlert(true);
+          return MAX_RECORDING_TIME;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+  };
 
   const startRecording = async () => {
     try {
@@ -98,18 +93,10 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       mediaRecorder.current = new MediaRecorder(stream);
       
       mediaRecorder.current.ondataavailable = () => {};
-
       mediaRecorder.current.onstart = () => {
         setIsRecording(true);
         setIsPaused(false);
         startTimer();
-      };
-
-      mediaRecorder.current.onstop = () => {
-        if (!isPaused) {
-          resetRecording();
-          onRecordingComplete();
-        }
       };
 
       mediaRecorder.current.start();
@@ -119,52 +106,29 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   };
 
   const pauseRecording = () => {
-    if (mediaRecorder.current && isRecording) {
-      mediaRecorder.current.stop();
-      pausedTime.current = recordingTime;
-      stopTimer();
-      setIsPaused(true);
-      setIsRecording(false);
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
     }
+    setIsPaused(true);
+    setIsRecording(false);
   };
 
-  const resumeRecording = async () => {
-    if (!audioStream.current) {
-      try {
-        audioStream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
-      } catch (err) {
-        setShowPermissionError(true);
-        return;
-      }
-    }
-
-    mediaRecorder.current = new MediaRecorder(audioStream.current);
-    mediaRecorder.current.ondataavailable = () => {};
-    
-    mediaRecorder.current.onstart = () => {
-      setIsRecording(true);
-      setIsPaused(false);
-      startTimer();
-    };
-
-    mediaRecorder.current.onstop = () => {
-      if (!isPaused) {
-        resetRecording();
-        onRecordingComplete();
-      }
-    };
-
-    mediaRecorder.current.start();
+  const resumeRecording = () => {
+    setIsRecording(true);
+    setIsPaused(false);
+    startTimer();
   };
 
   const handleRecordingButton = () => {
     if (!isRecording && !isPaused) {
+      // Starting new recording
       setRecordingTime(0);
-      pausedTime.current = 0;
       startRecording();
     } else if (isRecording) {
+      // Pausing recording
       pauseRecording();
     } else if (isPaused) {
+      // Resuming recording
       resumeRecording();
     }
   };
@@ -203,7 +167,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         
         <div className="text-center mt-4">
           <div className="text-xl font-medium text-white">
-            {formatTime(recordingTime)}/5:00
+            {formatTime(recordingTime)}/10:00
           </div>
           <p className="text-white/60 text-sm mt-2">
             {!isRecording && !isPaused && recordingTime === 0 && (
@@ -242,6 +206,26 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction onClick={() => setShowPermissionError(false)}>
+              Understand
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showTimeAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertCircle className="text-white" />
+              Maximum Recording Time Reached
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              You have reached the maximum recording time of 10 minutes. 
+              Please release your thoughts to continue recording.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowTimeAlert(false)}>
               Understand
             </AlertDialogAction>
           </AlertDialogFooter>
