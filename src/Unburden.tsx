@@ -14,15 +14,12 @@ import AudioRecorder from './components/AudioRecorder';
 
 const MAX_CHARACTERS = 5000;
 const MIN_SLIDE_THRESHOLD = 90;
-const MAX_ATTEMPTS = 5;
-const COOLDOWN_TIME = 600000; // 10 minutes in milliseconds
 
 interface ParticleStyles extends React.CSSProperties {
   '--tx'?: string;
   '--ty'?: string;
   '--duration'?: string;
 }
-
 const NavigationWarning: React.FC<{
   isOpen: boolean;
   onConfirm: () => void;
@@ -103,7 +100,6 @@ const SuccessMessage: React.FC = () => (
     </div>
   </div>
 );
-
 const Terms: React.FC<{
   isOpen: boolean;
   onAccept: () => void;
@@ -138,27 +134,6 @@ const Terms: React.FC<{
     </AlertDialogContent>
   </AlertDialog>
 );
-
-const CooldownAlert: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-}> = ({ isOpen, onClose }) => (
-  <AlertDialog open={isOpen}>
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Taking a Brief Pause</AlertDialogTitle>
-        <AlertDialogDescription>
-          You've reached the maximum number of releases (5) for now. 
-          Please wait 10 minutes before releasing more thoughts.
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogAction onClick={onClose}>Understand</AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
-);
-
 const Unburden: React.FC = () => {
   const navigate = useNavigate();
   const [thought, setThought] = useState<string>('');
@@ -171,9 +146,6 @@ const Unburden: React.FC = () => {
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [pendingMode, setPendingMode] = useState<'text' | 'voice' | null>(null);
   const [inputMode, setInputMode] = useState<'text' | 'voice'>('voice');
-  const [globalAttemptCount, setGlobalAttemptCount] = useState<number>(0);
-  const [isInCooldown, setIsInCooldown] = useState<boolean>(false);
-  const [showCooldownAlert, setShowCooldownAlert] = useState<boolean>(false);
   const [particles, setParticles] = useState<ParticleStyles[]>([]);
   const [canRelease, setCanRelease] = useState<boolean>(false);
   const [isVoiceRecording, setIsVoiceRecording] = useState<boolean>(false);
@@ -192,7 +164,6 @@ const Unburden: React.FC = () => {
       textareaRef.current.style.height = Math.max(200, textareaRef.current.scrollHeight) + 'px';
     }
   }, [thought]);
-
   const handleNavigation = (path: string) => {
     if ((inputMode === 'text' && thought.trim()) || 
         (inputMode === 'voice' && (isVoiceRecording || currentRecordingTime > 0))) {
@@ -243,22 +214,6 @@ const Unburden: React.FC = () => {
   const handleRelease = () => {
     if ((!thought && inputMode === 'text') || isAnimating) return;
     
-    if (isInCooldown) {
-      setShowCooldownAlert(true);
-      return;
-    }
-
-    if (globalAttemptCount >= MAX_ATTEMPTS) {
-      setIsInCooldown(true);
-      setShowCooldownAlert(true);
-      setTimeout(() => {
-        setIsInCooldown(false);
-        setGlobalAttemptCount(0);
-        setShowCooldownAlert(false);
-      }, COOLDOWN_TIME);
-      return;
-    }
-    
     setIsAnimating(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     createParticles();
@@ -275,7 +230,6 @@ const Unburden: React.FC = () => {
           setIsAnimating(false);
           setSliderValue(0);
           setParticles([]);
-          setGlobalAttemptCount(prev => prev + 1);
           setCanRelease(false);
           setCurrentRecordingTime(0);
         }, 1500);
@@ -311,7 +265,6 @@ const Unburden: React.FC = () => {
     setCurrentRecordingTime(time);
     setCanRelease(true);
   };
-
   return (
     <div className="min-h-screen grid-pattern relative overflow-hidden">
       <div className="container mx-auto p-4 relative z-10">
@@ -370,7 +323,7 @@ const Unburden: React.FC = () => {
               </>
             ) : (
               <div className={isAnimating ? 'animate-fade-away' : ''}>
-                  <AudioRecorder
+                <AudioRecorder
                   isAnimating={isAnimating}
                   onRecordingComplete={() => setCanRelease(true)}
                   onRecordingChange={handleRecordingChange}
@@ -406,9 +359,8 @@ const Unburden: React.FC = () => {
                 className="release-slider w-full"
                 disabled={(!canRelease) || isAnimating}
               />
-              <div className="text-white/80 mt-2 flex items-center justify-center gap-2">
-                <span>Slide to Release the thoughts</span>
-                <span className="text-white/60">({globalAttemptCount}/{MAX_ATTEMPTS})</span>
+              <div className="text-white/80 mt-2">
+                Slide to Release the thoughts
               </div>
             </div>
           </div>
@@ -439,12 +391,6 @@ const Unburden: React.FC = () => {
         }}
       />
       {showSuccess && <SuccessMessage />}
-      {showCooldownAlert && (
-        <CooldownAlert 
-          isOpen={true} 
-          onClose={() => setShowCooldownAlert(false)} 
-        />
-      )}
     </div>
   );
 };
