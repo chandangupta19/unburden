@@ -27,26 +27,32 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [recordingTime, setRecordingTime] = useState<number>(0);
   const [showPermissionError, setShowPermissionError] = useState<boolean>(false);
+  
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const timerInterval = useRef<NodeJS.Timeout | null>(null);
   const audioStream = useRef<MediaStream | null>(null);
-  const finalTime = useRef<number>(0);
+  const pausedTime = useRef<number>(0);
 
   const MAX_RECORDING_TIME = 300; // 5 minutes in seconds
 
   function stopTimer() {
     if (timerInterval.current) {
       clearInterval(timerInterval.current);
+      timerInterval.current = null;
     }
   }
 
-  function stopRecording() {
-    if (mediaRecorder.current && isRecording) {
-      mediaRecorder.current.stop();
-      stopTimer();
-      setIsRecording(false);
-      setIsPaused(false);
-    }
+  function startTimer() {
+    stopTimer(); // Clear any existing timer
+    timerInterval.current = setInterval(() => {
+      setRecordingTime(prev => {
+        if (prev >= MAX_RECORDING_TIME - 1) {
+          pauseRecording();
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 1000);
   }
 
   useEffect(() => {
@@ -61,18 +67,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   useEffect(() => {
     onRecordingChange(isRecording, recordingTime);
   }, [isRecording, recordingTime, onRecordingChange]);
-
-  function startTimer() {
-    timerInterval.current = setInterval(() => {
-      setRecordingTime(prev => {
-        if (prev >= MAX_RECORDING_TIME - 1) {
-          stopRecording();
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 1000);
-  }
 
   async function startRecording() {
     try {
@@ -89,11 +83,13 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       };
 
       mediaRecorder.current.onstop = () => {
-        if (audioStream.current) {
-          audioStream.current.getTracks().forEach(track => track.stop());
+        if (!isPaused) {
+          // Only cleanup if we're fully stopping, not pausing
+          if (audioStream.current) {
+            audioStream.current.getTracks().forEach(track => track.stop());
+          }
+          onRecordingComplete();
         }
-        finalTime.current = recordingTime;
-        onRecordingComplete();
       };
 
       mediaRecorder.current.start();
@@ -102,20 +98,52 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     }
   }
 
-  function pauseOrStopRecording() {
+  function pauseRecording() {
     if (mediaRecorder.current && isRecording) {
       mediaRecorder.current.stop();
+      pausedTime.current = recordingTime;
       stopTimer();
+      setIsPaused(true);
       setIsRecording(false);
-      setIsPaused(false);
     }
   }
 
-  function handleStartOrResume() {
-    if (!isRecording) {
+  function resumeRecording() {
+    if (audioStream.current) {
+      mediaRecorder.current = new MediaRecorder(audioStream.current);
+      mediaRecorder.current.ondataavailable = () => {};
+      
+      mediaRecorder.current.onstart = () => {
+        setIsRecording(true);
+        setIsPaused(false);
+        startTimer();
+      };
+
+      mediaRecorder.current.onstop = () => {
+        if (!isPaused) {
+          if (audioStream.current) {
+            audioStream.current.getTracks().forEach(track => track.stop());
+          }
+          onRecordingComplete();
+        }
+      };
+
+      mediaRecorder.current.start();
+    }
+  }
+
+  function handleRecordingButton() {
+    if (!isRecording && !isPaused) {
+      // Start new recording
       setRecordingTime(0);
-      finalTime.current = 0;
+      pausedTime.current = 0;
       startRecording();
+    } else if (isRecording) {
+      // Pause current recording
+      pauseRecording();
+    } else if (isPaused) {
+      // Resume paused recording
+      resumeRecording();
     }
   }
 
@@ -129,32 +157,26 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     <div className="flex flex-col items-center space-y-4">
       <div className="glass-panel p-8 rounded-lg w-full max-w-md">
         <div className="flex items-center justify-center space-x-6">
-          {!isRecording ? (
-            <button
-              onClick={handleStartOrResume}
-              disabled={disabled || isAnimating}
-              className={`p-4 rounded-full transition-colors ${
-                disabled || isAnimating 
+          <button
+            onClick={handleRecordingButton}
+            disabled={disabled || isAnimating}
+            className={`p-4 rounded-full transition-colors ${
+              isRecording 
+                ? 'bg-red-500/80 hover:bg-red-500' 
+                : disabled || isAnimating 
                   ? 'bg-white/10 opacity-50' 
                   : 'bg-white/10 hover:bg-white/20'
-              }`}
-              title="Start recording"
-            >
-              {isPaused ? (
-                <Play className="w-6 h-6 text-white" />
-              ) : (
-                <Mic className="w-6 h-6 text-white" />
-              )}
-            </button>
-          ) : (
-            <button
-              onClick={pauseOrStopRecording}
-              className="p-4 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors"
-              title="Pause/Stop recording"
-            >
+            }`}
+            title={isRecording ? "Pause recording" : isPaused ? "Resume recording" : "Start recording"}
+          >
+            {isRecording ? (
               <Square className="w-6 h-6 text-white" />
-            </button>
-          )}
+            ) : isPaused ? (
+              <Play className="w-6 h-6 text-white" />
+            ) : (
+              <Mic className="w-6 h-6 text-white" />
+            )}
+          </button>
         </div>
         
         <div className="text-center mt-4">
@@ -162,11 +184,14 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
             {formatTime(recordingTime)}/5:00
           </div>
           <p className="text-white/60 text-sm mt-2">
-            {!isRecording && recordingTime === 0 && (
+            {!isRecording && !isPaused && recordingTime === 0 && (
               "Click to start recording"
             )}
             {isRecording && (
               "Recording..."
+            )}
+            {isPaused && (
+              "Recording paused"
             )}
           </p>
         </div>
