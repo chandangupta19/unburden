@@ -327,6 +327,7 @@ const Unburden: React.FC = () => {
                   isAnimating={isAnimating}
                   onRecordingComplete={() => setCanRelease(true)}
                   onRecordingChange={handleRecordingChange}
+                  onRelease={handleRelease}
                   disabled={sliderValue >= MIN_SLIDE_THRESHOLD}
                 />
               </div>

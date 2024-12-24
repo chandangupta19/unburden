@@ -14,6 +14,7 @@ interface AudioRecorderProps {
   isAnimating: boolean;
   onRecordingComplete: () => void;
   onRecordingChange: (isRecording: boolean, time: number) => void;
+  onRelease: () => void;
   disabled?: boolean;
 }
 
@@ -21,6 +22,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   isAnimating, 
   onRecordingComplete,
   onRecordingChange,
+  onRelease,
   disabled = false 
 }) => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -87,6 +89,11 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   };
 
   const startRecording = async () => {
+    if (recordingTime >= MAX_RECORDING_TIME) {
+      setShowTimeAlert(true);
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioStream.current = stream;
@@ -114,6 +121,10 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   };
 
   const resumeRecording = () => {
+    if (recordingTime >= MAX_RECORDING_TIME) {
+      setShowTimeAlert(true);
+      return;
+    }
     setIsRecording(true);
     setIsPaused(false);
     startTimer();
@@ -221,12 +232,15 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
             </AlertDialogTitle>
             <AlertDialogDescription>
               You have reached the maximum recording time of 10 minutes. 
-              Please release your thoughts to continue recording.
+              Click below to release your thoughts.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setShowTimeAlert(false)}>
-              Understand
+            <AlertDialogAction onClick={() => {
+              setShowTimeAlert(false);
+              onRelease();
+            }}>
+              Release Thoughts
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
