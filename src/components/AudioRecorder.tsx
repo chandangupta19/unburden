@@ -35,6 +35,20 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
   const MAX_RECORDING_TIME = 300; // 5 minutes in seconds
 
+  // Reset everything
+  const resetRecording = () => {
+    stopTimer();
+    setRecordingTime(0);
+    setIsRecording(false);
+    setIsPaused(false);
+    pausedTime.current = 0;
+    if (audioStream.current) {
+      audioStream.current.getTracks().forEach(track => track.stop());
+      audioStream.current = null;
+    }
+    mediaRecorder.current = null;
+  };
+
   function stopTimer() {
     if (timerInterval.current) {
       clearInterval(timerInterval.current);
@@ -65,8 +79,17 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   }, []);
 
   useEffect(() => {
-    onRecordingChange(isRecording, recordingTime);
+    // Only consider recording active if we have actual recorded content
+    const hasContent = recordingTime > 0;
+    onRecordingChange(isRecording, hasContent ? recordingTime : 0);
   }, [isRecording, recordingTime, onRecordingChange]);
+
+  // Reset when animation starts (release action)
+  useEffect(() => {
+    if (isAnimating) {
+      resetRecording();
+    }
+  }, [isAnimating]);
 
   async function startRecording() {
     try {
@@ -84,10 +107,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
       mediaRecorder.current.onstop = () => {
         if (!isPaused) {
-          // Only cleanup if we're fully stopping, not pausing
-          if (audioStream.current) {
-            audioStream.current.getTracks().forEach(track => track.stop());
-          }
+          resetRecording();
           onRecordingComplete();
         }
       };
@@ -108,28 +128,34 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     }
   }
 
-  function resumeRecording() {
-    if (audioStream.current) {
-      mediaRecorder.current = new MediaRecorder(audioStream.current);
-      mediaRecorder.current.ondataavailable = () => {};
-      
-      mediaRecorder.current.onstart = () => {
-        setIsRecording(true);
-        setIsPaused(false);
-        startTimer();
-      };
-
-      mediaRecorder.current.onstop = () => {
-        if (!isPaused) {
-          if (audioStream.current) {
-            audioStream.current.getTracks().forEach(track => track.stop());
-          }
-          onRecordingComplete();
-        }
-      };
-
-      mediaRecorder.current.start();
+  async function resumeRecording() {
+    if (!audioStream.current) {
+      // If stream was lost, get a new one
+      try {
+        audioStream.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (err) {
+        setShowPermissionError(true);
+        return;
+      }
     }
+
+    mediaRecorder.current = new MediaRecorder(audioStream.current);
+    mediaRecorder.current.ondataavailable = () => {};
+    
+    mediaRecorder.current.onstart = () => {
+      setIsRecording(true);
+      setIsPaused(false);
+      startTimer();
+    };
+
+    mediaRecorder.current.onstop = () => {
+      if (!isPaused) {
+        resetRecording();
+        onRecordingComplete();
+      }
+    };
+
+    mediaRecorder.current.start();
   }
 
   function handleRecordingButton() {
