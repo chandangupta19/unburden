@@ -34,6 +34,21 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
 
   const MAX_RECORDING_TIME = 300; // 5 minutes in seconds
 
+  function stopTimer() {
+    if (timerInterval.current) {
+      clearInterval(timerInterval.current);
+    }
+  }
+
+  function stopRecording() {
+    if (mediaRecorder.current && isRecording) {
+      mediaRecorder.current.stop();
+      stopTimer();
+      setIsRecording(false);
+      setIsPaused(false);
+    }
+  }
+
   useEffect(() => {
     return () => {
       stopTimer();
@@ -47,7 +62,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     onRecordingChange(isRecording, recordingTime);
   }, [isRecording, recordingTime, onRecordingChange]);
 
-  const startTimer = () => {
+  function startTimer() {
     timerInterval.current = setInterval(() => {
       setRecordingTime(prev => {
         if (prev >= MAX_RECORDING_TIME - 1) {
@@ -57,15 +72,9 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         return prev + 1;
       });
     }, 1000);
-  };
+  }
 
-  const stopTimer = () => {
-    if (timerInterval.current) {
-      clearInterval(timerInterval.current);
-    }
-  };
-
-  const startRecording = async () => {
+  async function startRecording() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioStream.current = stream;
@@ -91,32 +100,30 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     } catch (err) {
       setShowPermissionError(true);
     }
-  };
+  }
 
-  const pauseOrStopRecording = () => {
+  function pauseOrStopRecording() {
     if (mediaRecorder.current && isRecording) {
       mediaRecorder.current.stop();
       stopTimer();
       setIsRecording(false);
       setIsPaused(false);
     }
-  };
+  }
 
-  const handleStartOrResume = () => {
+  function handleStartOrResume() {
     if (!isRecording) {
       setRecordingTime(0);
       finalTime.current = 0;
       startRecording();
     }
-  };
+  }
 
-  const formatTime = (seconds: number): string => {
+  function formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
-  const buttonLabel = isRecording ? "Pause/Stop" : "Record";
+  }
 
   return (
     <div className="flex flex-col items-center space-y-4">
